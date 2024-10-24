@@ -11,6 +11,29 @@ from webdriver_manager.chrome import ChromeDriverManager
 import csv
 
 
+def click_negative_reviews_button(driver: webdriver):
+    wait = WebDriverWait(driver, 10)
+
+    try:
+        # Шаг 1: Найти и нажать на кнопку, открывающую выпадающий список
+        dropdown_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[data-qa="trigger"]')))
+        dropdown_button.click()
+        print("Выпадающий список открыт.")
+        time.sleep(1)  # Небольшая пауза, чтобы дать время на рендеринг
+
+        # Шаг 2: Дождаться появления выпадающего списка
+        options_popup = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.QBZ4D.TsNTx')))
+
+        # Шаг 3: Найти и кликнуть по кнопке "Сначала отрицательные"
+        negative_reviews_button = options_popup.find_element(By.CSS_SELECTOR,
+                                                             'button[data-index="2"][data-qa="byRatingAsc-option"]')
+        negative_reviews_button.click()
+        print("Кнопка 'Сначала отрицательные' нажата.")
+
+    except Exception as e:
+        print(f"Ошибка при нажатии на кнопку 'Сначала отрицательные': {e}")
+
+
 # Функция для настройки драйвера
 def setup_driver():
     options = Options()
@@ -26,7 +49,7 @@ def setup_driver():
 def parse_reviews(driver: webdriver, url: str, num: int, filename='reviews.csv'):
     driver.get(url)
 
-    reviews = []
+    click_negative_reviews_button(driver)
     wait = WebDriverWait(driver, 20)
 
     # Нажимаем на кнопку "Еще отзывы", чтобы загрузить больше отзывов
@@ -68,8 +91,8 @@ def parse_reviews(driver: webdriver, url: str, num: int, filename='reviews.csv')
             stars = starlist.find_elements(By.CLASS_NAME, 'LFBXk.KN22d')
             mark = sum([1 for star in stars if star.get_attribute('aria-selected') == 'true'])
         except Exception as e:
-            mark = 0
             print(f"Ошибка при получении оценки: {e}")
+            continue
 
         try:
             text_div = element.find_element(By.CLASS_NAME, 'RYSdb')
@@ -115,9 +138,9 @@ def save_reviews_to_csv(reviews: List, filename='reviews.csv'):
 
 
 def main():
-    url = 'https://travel.yandex.ru/hotels/saint-petersburg/u-hotel/'
+    url = 'https://travel.yandex.ru/hotels/moscow/khilton-moskva-leningradskaia/'
     driver = setup_driver()
-    num = 100  # Количество загрузок новых отзывов
+    num = 115  # Количество загрузок новых отзывов
 
     try:
         parse_reviews(driver, url, num=num, filename='reviews.csv')
