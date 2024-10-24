@@ -27,7 +27,7 @@ def parse_reviews(driver: webdriver, url: str, num: int, filename='reviews.csv')
     driver.get(url)
 
     reviews = []
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Нажимаем на кнопку "Еще отзывы", чтобы загрузить больше отзывов
     for i in range(num):
@@ -115,11 +115,12 @@ def save_reviews_to_csv(reviews: List, filename='reviews.csv'):
 
 
 def main():
-    url = 'https://travel.yandex.ru/hotels/moscow/soluxe-hotel-moscow/'
+    url = 'https://travel.yandex.ru/hotels/saint-petersburg/u-hotel/'
     driver = setup_driver()
+    num = 100  # Количество загрузок новых отзывов
 
     try:
-        parse_reviews(driver, url, num=1, filename='test_reviews.csv')
+        parse_reviews(driver, url, num=num, filename='reviews.csv')
     finally:
         driver.quit()
 
