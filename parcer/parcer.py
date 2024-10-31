@@ -63,7 +63,7 @@ def parse_reviews(driver: webdriver, url: str, num: int, negative: bool, filenam
         logging.error(f"Ошибка при получении названия отеля: {e}")
         return
     try:
-        label = label_div.find_element(By.TAG_NAME, 'h1').text
+        label = label_div.find_element(By.TAG_NAME, 'h1').text[:-3]
         print(f"Название отеля: {label}")
     except Exception as e:
         logging.error(f"Ошибка при получении названия отеля: {e}")
