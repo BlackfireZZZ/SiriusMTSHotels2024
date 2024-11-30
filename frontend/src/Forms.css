@@ -1,0 +1,17 @@
+.checkbox-group {
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    flex-wrap: wrap; /* Если необходимо, чтобы контейнеры оборачивались на следующую строку */
+    gap: 10px; /* Отступ между контейнерами */
+}
+
+.category-container {
+    border: 2px solid;
+    padding: 10px 20px;
+    border-radius: 8px; /* Скругление краев */
+    display: flex;
+    align-items: center; /* Выравнивание текста по вертикали */
+    font-weight: bold;
+    text-align: center; /* Центрирование текста */
+    width: 120px; /* Ширина контейнера (можно изменить при необходимости) */
+}

@@ -49,6 +49,7 @@ def setup_driver():
 
 def parse_reviews(driver: webdriver, url: str, num: int, negative: bool, filename='reviews.csv'):
     driver.get(url)
+    time.sleep(4)
 
     if negative:
         click_negative_reviews_button(driver)
@@ -87,7 +88,7 @@ def parse_reviews(driver: webdriver, url: str, num: int, negative: bool, filenam
         try:
             load_more_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div.ZfjL0 > button.Kw61r.FXx4u.iLk5Q')))
             load_more_button.click()
-            time.sleep(2)  # Ждем некоторое время после нажатия
+            time.sleep(2.5)  # Ждем некоторое время после нажатия
         except Exception as e:
             logging.error(f"Не удалось нажать на кнопку 'Еще отзывы' или кнопка больше не доступна: {e}")
             break
@@ -143,14 +144,14 @@ def parse_reviews(driver: webdriver, url: str, num: int, negative: bool, filenam
     return
 
 
-def save_review_to_csv(review: List, filename='new_reviews.csv'):
+def save_review_to_csv(review: List, filename='new_reviews2.csv'):
     with open(filename, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(review)
 
 
 # Функция для записи в CSV файл
-def save_reviews_to_csv(reviews: List, filename='new_reviews.csv'):
+def save_reviews_to_csv(reviews: List, filename='new_reviews2.csv'):
     # Если файл не существует, создаем его с заголовками
     try:
         with open(filename, mode='x', newline='', encoding='utf-8') as file:
@@ -166,13 +167,12 @@ def save_reviews_to_csv(reviews: List, filename='new_reviews.csv'):
             writer.writerow(review)
 
 
-def main():
-    url = 'https://travel.yandex.ru/hotels/moscow/baikal-selskokhoziaistvennaia-ulitsa-15-1/'
+def main(url: str):
     driver = setup_driver()
     num = 95  # Количество загрузок новых отзывов
 
     try:
-        parse_reviews(driver, url, num=num, negative=False, filename='new_reviews.csv')
+        parse_reviews(driver, url, num=num, negative=False, filename='new_reviews2.csv')
     finally:
         driver.quit()
 
