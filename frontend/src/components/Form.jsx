@@ -16,8 +16,11 @@ const Form = ({ formRef }) => {
         rooms: "",
         comment: "",
         style: "formal",
+        services: [], // Новый массив для хранения списка услуг
     });
+
     const [errorMessage, setErrorMessage] = useState("");
+    const [serviceError, setServiceError] = useState(""); // Состояние для ошибки услуг
 
     const exampleText = {
         formal: "We cordially invite you to partake in our exquisite event, designed to leave an indelible mark upon your esteemed experience.",
@@ -106,6 +109,41 @@ const Form = ({ formRef }) => {
         setHotelInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
     };
 
+    // Функция добавления услуги
+    const addService = () => {
+        // Проверяем, есть ли пустая услуга
+        if (hotelInfo.services.length > 0 && hotelInfo.services[hotelInfo.services.length - 1] === "") {
+            setServiceError("Пустая услуга");
+            return;
+        }
+
+        // Убираем ошибку и добавляем новую пустую услугу
+        setServiceError("");
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            services: [...prevInfo.services, ""],
+        }));
+    };
+
+
+// Функция удаления услуги по индексу
+    const removeService = (index) => {
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            services: prevInfo.services.filter((_, i) => i !== index), // Удаляем услугу
+        }));
+    };
+
+// Функция обновления текста услуги
+    const updateService = (index, value) => {
+        setHotelInfo((prevInfo) => {
+            const updatedServices = [...prevInfo.services];
+            updatedServices[index] = value; // Обновляем текст услуги
+            return { ...prevInfo, services: updatedServices };
+        });
+    };
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Collected data:", { hasHotel, hotelLink, hotelInfo });
@@ -122,7 +160,7 @@ const Form = ({ formRef }) => {
             case 3:
                 return '40vw'; // Минимальная высота для stage 3
             case 4:
-                return '50vw'; // Минимальная высота для stage 4
+                return '60vw'; // Минимальная высота для stage 4
         }
     };
 
@@ -226,6 +264,7 @@ const Form = ({ formRef }) => {
                                                         handleNextStage();
                                                     }}
                                                             className="prev-button"
+                                                            style={{width: '80px'}}
                                                     >
                                                         Да
                                                     </button>
@@ -234,6 +273,7 @@ const Form = ({ formRef }) => {
                                                         setStage(3);
                                                     }}
                                                             className="prev-button"
+                                                            style={{width: '80px'}}
                                                     >
                                                         Нет
                                                     </button>
@@ -305,14 +345,14 @@ const Form = ({ formRef }) => {
                                                     <div className="buttons">
                                                         <button
                                                             onClick={handlePrevStage}
-                                                            className="prev-button"
+                                                            className="prev-button text-style-button"
                                                             style={{width: "100px"}}
                                                         >
                                                             Назад
                                                         </button>
                                                         <button
                                                             onClick={handleNextStage}
-                                                            className="prev-button"
+                                                            className="prev-button text-style-button"
                                                             style={{width: "100px"}}
                                                         >
                                                             Далее
@@ -324,16 +364,17 @@ const Form = ({ formRef }) => {
                                             {stage === 4 && (
                                                 <form onSubmit={handleSubmit}>
                                                     <div className="form-container">
-                                                        <div className="form-left" style={{width: '650px'}}>
+                                                        <div className="form-left" style={{width: '900px'}}>
                                                             <div className="form-row">
-                                                                <div>
-                                                                    <label>
+                                                                <div style={{width: '100%'}}>
+                                                                    <label style={{width: '100%'}}>
                                                                         Название:
                                                                         <input
                                                                             type="text"
                                                                             name="name"
                                                                             value={hotelInfo.name}
                                                                             onChange={handleHotelInfoChange}
+                                                                            style={{width: '100%'}}
                                                                             required
                                                                         />
                                                                     </label>
@@ -352,8 +393,8 @@ const Form = ({ formRef }) => {
                                                                         />
                                                                     </label>
                                                                 </div>
-                                                                <div>
-                                                                    <label>
+                                                                <div style={{width: '100px'}}>
+                                                                    <label style={{width: '100%'}}>
                                                                         Количество номеров:
                                                                         <input
                                                                             type="number"
@@ -362,17 +403,16 @@ const Form = ({ formRef }) => {
                                                                             max="1000"
                                                                             value={hotelInfo.rooms}
                                                                             onChange={handleHotelInfoChange}
+                                                                            style={{width: '100%'}}
                                                                             required
                                                                         />
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="form-right">
                                                             <span className="wpcf7-form-control-wrap"
                                                                   data-name="textarea-312">
                                                                 <p>
-                                                                    Описание вашего отеля
+                                                                    Дополнительная информация
                                                                 </p>
                                                                 <textarea
                                                                     onChange={(e) =>
@@ -387,10 +427,50 @@ const Form = ({ formRef }) => {
                                                                     className="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required"
                                                                     aria-required="true"
                                                                     aria-invalid="false"
-                                                                    placeholder="Добавьте ваше описание"
+                                                                    placeholder="Ваш комментарий"
                                                                     value={hotelInfo.comment}
                                                                 />
                                                             </span>
+                                                        </div>
+                                                        <div className="form-right">
+
+                                                            <div>
+                                                                <p>Услуги отеля</p>
+                                                                <div className="services-container">
+                                                                    {hotelInfo.services.map((service, index) => (
+                                                                        <div key={index} className="service-item">
+                                                                            {/* Поле ввода для услуги */}
+                                                                            <input
+                                                                                type="text"
+                                                                                value={service}
+                                                                                onChange={(e) => updateService(index, e.target.value)}
+                                                                                placeholder="Введите услугу"
+                                                                            />
+                                                                            {/* Кнопка удаления услуги */}
+                                                                            <button
+                                                                                type="button"
+                                                                                className="delete-button"
+                                                                                onClick={() => removeService(index)}
+                                                                            >
+                                                                                x
+                                                                            </button>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                                {/* Кнопка добавления новой услуги */}
+                                                                <div style={{
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    gap: "10px"
+                                                                }}>
+                                                                    <button type="button" className="service-button" onClick={addService}>
+                                                                        +
+                                                                    </button>
+                                                                    {serviceError && <span
+                                                                        className="error-message">{serviceError}</span>}
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
 

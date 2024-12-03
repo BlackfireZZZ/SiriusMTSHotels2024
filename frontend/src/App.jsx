@@ -1,5 +1,7 @@
 import './App.css';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import Cookies from "js-cookie";
+import { v4 as uuidv4 } from "uuid";
 import Form from "./components/Form";
 import Header from "./components/Header";
 import KeyWords from "./components/KeyWords";
@@ -8,6 +10,19 @@ import AboutUs from "./components/AboutUs";
 
 
 function App() {
+  useEffect(() => {
+    // Проверяем наличие куки session
+    const sessionCookie = Cookies.get("session");
+    if (!sessionCookie) {
+      // Устанавливаем новую куки с UUID
+      const newSession = uuidv4();
+      Cookies.set("session", newSession, { expires: 1 }); // срок действия 1 день
+      console.log("Новая сессия создана:", newSession);
+    } else {
+      console.log("Существующая сессия:", sessionCookie);
+    }
+  }, []);
+
   const formRef = useRef(null);
   const techRef = useRef(null);
   const aboutUsRef = useRef(null);

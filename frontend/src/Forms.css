@@ -55,3 +55,58 @@
     border-color: #ff0032ff;
     color: white;
 }
+
+.services-container {
+    max-height: 300px; /* Ограничение высоты */
+    overflow-y: auto; /* Прокрутка по вертикали */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Отступы между услугами */
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступ между полем и кнопкой */
+}
+
+.service-item input {
+    flex: 1; /* Растягиваем поле ввода */
+    padding: 5px;
+}
+
+.service-item button {
+    background-color: #ff0032ff;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.service-button {
+    margin-top: 10px;
+    background-color: #173A63;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: #ff0032ff;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    width: 40px !important;
+}
+
+.error-message {
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+}
+
