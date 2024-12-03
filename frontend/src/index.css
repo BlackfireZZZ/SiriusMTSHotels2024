@@ -1,0 +1,16 @@
+.btn {
+    background-color: #ff0032ff !important;
+    border: #ff0032ff !important;
+}
+
+.h6 {
+    color: #ff0032ff !important;
+}
+
+:root {
+    --color-primary: #ff0032ff !important;
+    --color-gradient-start: #ff0032ff !important;
+    --color-gradient-stop: #ff0032ff !important;
+    --lqd-cc-active-bw: 1px;
+}
+

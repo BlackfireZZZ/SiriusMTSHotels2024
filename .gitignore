@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
 parcer/reviews.csv
 parcer/test_reviews.csv
-parcer/new_reviews.csv
+parcer/new_reviews22.csv
 __pycache__/
 *.py[cod]
 *$py.class

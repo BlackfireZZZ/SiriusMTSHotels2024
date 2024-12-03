@@ -1,0 +1,57 @@
+.checkbox-group {
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    flex-wrap: wrap; /* Если необходимо, чтобы контейнеры оборачивались на следующую строку */
+    gap: 10px; /* Отступ между контейнерами */
+}
+
+.category-container {
+    border: 2px solid;
+    padding: 10px 20px;
+    border-radius: 8px; /* Скругление краев */
+    display: flex;
+    align-items: center; /* Выравнивание текста по вертикали */
+    font-weight: bold;
+    text-align: center; /* Центрирование текста */
+    width: 120px; /* Ширина контейнера (можно изменить при необходимости) */
+}
+
+.form-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.form-left,
+.form-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Для равной высоты */
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.form-row > div {
+    flex: 1;
+}
+
+.prev-button {
+    border-radius: 50px;
+    padding: 10px 20px;
+    position: relative;
+    bottom: 10px;
+    left: 10px;
+    top: 20px;
+    margin: 5px;
+}
+
+.green-button {
+    background-color: #ff0032ff;
+    border-color: #ff0032ff;
+    color: white;
+}
