@@ -8,6 +8,7 @@ const Form = ({ formRef }) => {
     const [stage, setStage] = useState(1);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
+    const [loading, setLoading] = useState(false);
     const [hotelInfo, setHotelInfo] = useState({
         name: "",
         stars: "",
@@ -40,12 +41,9 @@ const Form = ({ formRef }) => {
         text = 'Заполните информацию о вашем отеле';
     }
 
-    const handleNextStage = () => {
-
+    const handleNextStage = async () => {
         if (stage === 2) {
-            // Очистка ошибки
             setErrorMessage("");
-
 
             // Проверка, что ссылка начинается с https://
             if (!hotelLink.startsWith("https://")) {
@@ -61,11 +59,44 @@ const Form = ({ formRef }) => {
                 setErrorMessage("Мы не можем получить информацию с этого сайта");
                 return;
             }
-        }
 
-        // Если валидация прошла, увеличиваем стадию
-        setStage((prevStage) => prevStage + 1);
+            // Отправка запроса на сервер
+            setLoading(true);
+            try {
+                const response = await fetch(`${base_url}/parcing/parce`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ url: hotelLink }),
+                });
+
+                if (!response.ok) {
+                    setErrorMessage("Ошибка при получении данных с сервера");
+                    return;
+                }
+
+                const data = await response.json();
+
+                // Обновляем информацию об отеле
+                setHotelInfo((prev) => ({
+                    ...prev,
+                    name: data.name,
+                    address: data.address,
+                }));
+
+                // Переход к следующему этапу
+                setStage((prev) => prev + 1);
+            } catch (error) {
+                setErrorMessage("Не удалось получить данные: " + error.message);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setStage((prev) => prev + 1);
+        }
     };
+
 
     const handlePrevStage = () => {
         setStage((prevStage) => (prevStage === 3 ? 1 : prevStage - 1));
@@ -218,18 +249,17 @@ const Form = ({ formRef }) => {
                                                         onChange={(e) => setHotelLink(e.target.value)}
                                                     />
                                                     {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
-                                                    <button onClick={handleNextStage}
-                                                            className="prev-button green-button">Отправить
-                                                    </button>
                                                     <button onClick={handlePrevStage} className="prev-button"
                                                             style={{width: '40%'}}>Назад
                                                     </button>
-
+                                                    <button onClick={handleNextStage}
+                                                            className="prev-button green-button">Отправить
+                                                    </button>
                                                 </div>
                                             )}
                                             {stage === 3 && (
                                                 <div className="text-style-selector">
-                                                    <div className="content">
+                                                <div className="content">
                                                         {/* Левая часть с чекбоксами */}
                                                         <div className="options">
                                                             <div className="option">
@@ -239,6 +269,7 @@ const Form = ({ formRef }) => {
                                                                     id="formalStyle"
                                                                     value="formal"
                                                                     onChange={handleStyleChange}
+                                                                    defaultChecked
                                                                 />
                                                                 <label htmlFor="formalStyle">Официальный</label>
                                                             </div>
@@ -249,7 +280,6 @@ const Form = ({ formRef }) => {
                                                                     id="neutralStyle"
                                                                     value="neutral"
                                                                     onChange={handleStyleChange}
-                                                                    defaultChecked
                                                                 />
                                                                 <label htmlFor="neutralStyle" >Нейтральный</label>
                                                             </div>
@@ -276,14 +306,14 @@ const Form = ({ formRef }) => {
                                                         <button
                                                             onClick={handlePrevStage}
                                                             className="prev-button"
-                                                            style={{width: "150px"}}
+                                                            style={{width: "100px"}}
                                                         >
                                                             Назад
                                                         </button>
                                                         <button
                                                             onClick={handleNextStage}
                                                             className="prev-button"
-                                                            style={{width: "150px"}}
+                                                            style={{width: "100px"}}
                                                         >
                                                             Далее
                                                         </button>
