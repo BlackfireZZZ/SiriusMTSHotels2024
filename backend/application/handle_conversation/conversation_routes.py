@@ -8,7 +8,9 @@ conversation_blueprint = Blueprint('conversation', __name__)
 
 @conversation_blueprint.route('/create', methods=['POST'])
 def create_conversation():
-    new_conversation = Conversation()
+    data = request.json
+    id = data['id']
+    new_conversation = Conversation(id=id)
     db.session.add(new_conversation)
     db.session.commit()
     return new_conversation.to_dict()

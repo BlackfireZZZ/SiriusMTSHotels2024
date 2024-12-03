@@ -11,6 +11,8 @@ class Hotel(db.Model):
     lat = db.Column(db.Float, nullable=False)
     rooms = db.Column(db.Integer, nullable=False, default=1)
     stars = db.Column(db.Integer, nullable=False, default=1)
+    description_type = db.Column(db.Integer, nullable=True, default=0)
+    description = db.Column(db.Text, nulable=True)
 
     def to_dict(self):
         """Возвращает отель в виде словаря."""
@@ -26,6 +28,9 @@ class Hotel(db.Model):
 
 
 class Conversation(db.Model):
+    def __init__(self, id: str):
+        self.id = id
+
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     messages = db.relationship('Message', backref='conversation', lazy=True)
 

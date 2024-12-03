@@ -1,0 +1,62 @@
+.text-style-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px; /* Расстояние между колонками и кнопками */
+}
+
+.content {
+    display: flex;
+    align-items: flex-start; /* Выравнивание чекбоксов и текста по верхнему краю */
+    gap: 40px; /* Расстояние между чекбоксами и текстом */
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Расстояние между опциями */
+}
+
+.option {
+    display: flex;
+    align-items: center; /* Выравнивание чекбоксов и текста по вертикали */
+    gap: 10px;
+}
+
+.option input[type="radio"] {
+    width: 20px; /* Увеличение ширины кнопки */
+    height: 20px; /* Увеличение высоты кнопки */
+}
+
+.option label {
+    margin-top: 10px !important; /* Смещение текста вниз для выравнивания с чекбоксами */
+}
+
+.example-text {
+    padding: 10px; /* Внутренние отступы текста */
+    border: 3px solid #ff080b; /* Обводка цвета #9C1A1C */
+    border-radius: 10px; /* Скруглённые углы */
+    display: flex;
+    align-items: center; /* Центрирование текста по вертикали */
+    justify-content: center;
+    height: 150px; /* Фиксированная высота контейнера */
+    width: 50%; /* Ширина контейнера текста */
+    overflow-y: auto; /* Если текст больше контейнера, появляется скролл */
+}
+
+.example-text p {
+    margin: 15px;
+    text-align: center;
+    max-width: 550px;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px; /* Промежуток между кнопками */
+    width: 100%; /* Растягиваем контейнер кнопок на всю ширину */
+}
+
+button {
+    flex: 1; /* Обе кнопки занимают равное пространство */
+    max-width: 200px; /* Ограничиваем ширину кнопок */
+}

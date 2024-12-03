@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Forms.css";
+import "../TextStyleSelector.css"
 import axios from "axios";
 import base_url from "../config";
 
@@ -13,8 +14,20 @@ const Form = ({ formRef }) => {
         address: "",
         rooms: "",
         comment: "",
+        style: "formal",
     });
     const [errorMessage, setErrorMessage] = useState("");
+
+    const exampleText = {
+        formal: "We cordially invite you to partake in our exquisite event, designed to leave an indelible mark upon your esteemed experience.",
+        neutral: "Join us for an event that promises to be both enjoyable and memorable.",
+        informal: "Hey, come hang out with us! It's going to be fun, promise!",
+    };
+
+    const handleStyleChange = (event) => {
+        const newStyle = event.target.value;
+        setHotelInfo((prev) => ({ ...prev, style: newStyle }));
+    };
 
     let text;
     if (stage === 1) {
@@ -22,6 +35,8 @@ const Form = ({ formRef }) => {
     } else if (stage === 2 && hasHotel) {
         text = 'Пожалуйста, укажите ссылку на ваш отель';
     } else if (stage === 3) {
+        text = 'Выберите стиль описания отеля';
+    } else if (stage === 4) {
         text = 'Заполните информацию о вашем отеле';
     }
 
@@ -74,7 +89,9 @@ const Form = ({ formRef }) => {
             case 2:
                 return '30vw'; // Минимальная высота для stage 2
             case 3:
-                return '50vw'; // Минимальная высота для stage 3
+                return '40vw'; // Минимальная высота для stage 3
+            case 4:
+                return '50vw'; // Минимальная высота для stage 4
         }
     };
 
@@ -167,7 +184,8 @@ const Form = ({ formRef }) => {
                                         <div className="form-container">
                                             {stage === 1 && (
                                                 <div
-                                                    style={{width: '100%', /* Занимает всю ширину родительского элемента */
+                                                    style={{
+                                                        width: '100%', /* Занимает всю ширину родительского элемента */
                                                         display: 'flex', /* Делаем контейнер flex-контейнером */
                                                         justifyContent: 'center'/* Выравниваем содержимое по центру по горизонтали */
                                                     }}
@@ -199,15 +217,81 @@ const Form = ({ formRef }) => {
                                                         value={hotelLink}
                                                         onChange={(e) => setHotelLink(e.target.value)}
                                                     />
-                                                    {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                                                    <button onClick={handleNextStage} className="prev-button green-button">Отправить</button>
+                                                    {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
+                                                    <button onClick={handleNextStage}
+                                                            className="prev-button green-button">Отправить
+                                                    </button>
                                                     <button onClick={handlePrevStage} className="prev-button"
-                                                    style={{width: '40%'}}>Назад</button>
+                                                            style={{width: '40%'}}>Назад
+                                                    </button>
 
                                                 </div>
                                             )}
-
                                             {stage === 3 && (
+                                                <div className="text-style-selector">
+                                                    <div className="content">
+                                                        {/* Левая часть с чекбоксами */}
+                                                        <div className="options">
+                                                            <div className="option">
+                                                                <input
+                                                                    type="radio"
+                                                                    name="textStyle"
+                                                                    id="formalStyle"
+                                                                    value="formal"
+                                                                    onChange={handleStyleChange}
+                                                                />
+                                                                <label htmlFor="formalStyle">Официальный</label>
+                                                            </div>
+                                                            <div className="option">
+                                                                <input
+                                                                    type="radio"
+                                                                    name="textStyle"
+                                                                    id="neutralStyle"
+                                                                    value="neutral"
+                                                                    onChange={handleStyleChange}
+                                                                    defaultChecked
+                                                                />
+                                                                <label htmlFor="neutralStyle" >Нейтральный</label>
+                                                            </div>
+                                                            <div className="option">
+                                                                <input
+                                                                    type="radio"
+                                                                    name="textStyle"
+                                                                    id="informalStyle"
+                                                                    value="informal"
+                                                                    onChange={handleStyleChange}
+                                                                />
+                                                                <label htmlFor="informalStyle">Неформальный</label>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Правая часть с текстом */}
+                                                        <div className="example-text">
+                                                            <p>{exampleText[hotelInfo.style]}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Кнопки */}
+                                                    <div className="buttons">
+                                                        <button
+                                                            onClick={handlePrevStage}
+                                                            className="prev-button"
+                                                            style={{width: "150px"}}
+                                                        >
+                                                            Назад
+                                                        </button>
+                                                        <button
+                                                            onClick={handleNextStage}
+                                                            className="prev-button"
+                                                            style={{width: "150px"}}
+                                                        >
+                                                            Далее
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {stage === 4 && (
                                                 <form onSubmit={handleSubmit}>
                                                     <div className="form-container">
                                                         <div className="form-left" style={{width: '650px'}}>
@@ -219,20 +303,6 @@ const Form = ({ formRef }) => {
                                                                             type="text"
                                                                             name="name"
                                                                             value={hotelInfo.name}
-                                                                            onChange={handleHotelInfoChange}
-                                                                            required
-                                                                        />
-                                                                    </label>
-                                                                </div>
-                                                                <div>
-                                                                    <label>
-                                                                        Количество звезд:
-                                                                        <input
-                                                                            type="number"
-                                                                            name="stars"
-                                                                            value={hotelInfo.stars}
-                                                                            min="1"
-                                                                            max="5"
                                                                             onChange={handleHotelInfoChange}
                                                                             required
                                                                         />
@@ -269,7 +339,11 @@ const Form = ({ formRef }) => {
                                                             </div>
                                                         </div>
                                                         <div className="form-right">
-                                                            <span className="wpcf7-form-control-wrap" data-name="textarea-312">
+                                                            <span className="wpcf7-form-control-wrap"
+                                                                  data-name="textarea-312">
+                                                                <p>
+                                                                    Описание вашего отеля
+                                                                </p>
                                                                 <textarea
                                                                     onChange={(e) =>
                                                                         setHotelInfo((prevInfo) => ({
@@ -289,6 +363,12 @@ const Form = ({ formRef }) => {
                                                             </span>
                                                         </div>
                                                     </div>
+
+                                                    {hasHotel !== null && <button onClick={handlePrevStage}
+                                                                                  className="wpcf7-form-control has-spinner wpcf7-submit prev-button"
+                                                                                  style={{width: "20%"}}>
+                                                        Назад
+                                                    </button>}
                                                     <input
                                                         type="submit"
                                                         value="Отправить"
@@ -304,13 +384,9 @@ const Form = ({ formRef }) => {
                                                             top: "20px",
                                                             margin: "5px",
                                                             width: "20%",
+                                                            height: '60px'
                                                         }}
                                                     />
-                                                    {hasHotel !== null && <button onClick={handlePrevStage}
-                                                                                  className="wpcf7-form-control has-spinner wpcf7-submit prev-button"
-                                                    style={{width: "20%"}}>
-                                                        Назад
-                                                    </button>}
                                                 </form>
 
                                             )}

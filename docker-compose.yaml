@@ -4,7 +4,7 @@ services:
       dockerfile: backend/Dockerfile
     container_name: SiriusApp
     environment:
-      POSTGRES_CONN: "postgres://postgres:postgres@db:5432/Sirius"
+      POSTGRES_CONN: ${POSTGRES_CONN}
     ports:
       - "8080:8080"
     volumes:
@@ -14,11 +14,11 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: Sirius
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: pg_isready -U postgres -d GreenCode
+      test: pg_isready -U postgres -d Sirius
       interval: 10s
       timeout: 5s
       retries: 5

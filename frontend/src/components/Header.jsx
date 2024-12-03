@@ -12,7 +12,7 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
     };
 
     const scrollToTech = () => {
-        const yOffset = -220;
+        const yOffset = -130;
         const elementPosition = techRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: elementPosition, behavior: 'smooth' });
     };
