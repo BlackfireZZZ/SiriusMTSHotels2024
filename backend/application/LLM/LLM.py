@@ -3,5 +3,5 @@ from typing import List, Optional
 from application.schemas import SiteInfo
 
 
-def apply(info: SiteInfo or None, context: List[Message] or None) -> str:
+def apply(info: SiteInfo or None, context: List or None) -> str:
     return 'Demo answer'

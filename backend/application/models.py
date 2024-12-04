@@ -27,8 +27,21 @@ class Hotel(db.Model):
     lon = db.Column(db.Float, nullable=False)
     lat = db.Column(db.Float, nullable=False)
     rooms = db.Column(db.Integer, nullable=False, default=1)
-    description_type = db.Column(db.Integer, nullable=True, default=0)
+    description_type = db.Column(db.String(100), nullable=True, default="")
     description = db.Column(db.Text, nullable=True)
+    services = db.relationship('Service', backref='hotel', cascade='all, delete-orphan', lazy='dynamic')
+    conversation_id = db.Column(db.String(36), db.ForeignKey('conversation.id'), nullable=False)
+
+    def __init__(self, name: str, address: str, lon: float, lat: float, rooms: int,
+                 conversation_id: str, description_type: str = "", description: str = None):
+        self.name = name
+        self.address = address
+        self.lon = lon
+        self.lat = lat
+        self.rooms = rooms
+        self.description_type = description_type
+        self.description = description
+        self.conversation_id = conversation_id
 
     def get_services(self):
         """Возвращает все сервисы в отеле в виде словаря."""
@@ -53,8 +66,10 @@ class Hotel(db.Model):
             "lon": self.lon,
             "lat": self.lat,
             "rooms": self.rooms,
-            "stars": self.stars,
-            "services": self.get_services()
+            "services": self.get_services(),
+            "description": self.description,
+            "description_type": self.description_type,
+            "conversation_id": self.conversation_id
         }
 
 
