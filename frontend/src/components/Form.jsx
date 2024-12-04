@@ -9,9 +9,9 @@ const Form = ({ formRef }) => {
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
+    const [dots, setDots] = useState(1);
     const [hotelInfo, setHotelInfo] = useState({
         name: "",
-        stars: "",
         address: "",
         rooms: "",
         comment: "",
@@ -30,7 +30,7 @@ const Form = ({ formRef }) => {
 
     const handleStyleChange = (event) => {
         const newStyle = event.target.value;
-        setHotelInfo((prev) => ({ ...prev, style: newStyle }));
+        setHotelInfo((prev) => ({...prev, style: newStyle}));
     };
 
     let text;
@@ -71,7 +71,7 @@ const Form = ({ formRef }) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ url: hotelLink }),
+                    body: JSON.stringify({url: hotelLink}),
                 });
 
                 if (!response.ok) {
@@ -106,8 +106,8 @@ const Form = ({ formRef }) => {
         setStage((prevStage) => (prevStage === 3 ? 1 : prevStage - 1));
     };
     const handleHotelInfoChange = (e) => {
-        const { name, value } = e.target;
-        setHotelInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
+        const {name, value} = e.target;
+        setHotelInfo((prevInfo) => ({...prevInfo, [name]: value}));
     };
 
     // Функция добавления услуги
@@ -140,16 +140,50 @@ const Form = ({ formRef }) => {
         setHotelInfo((prevInfo) => {
             const updatedServices = [...prevInfo.services];
             updatedServices[index] = value; // Обновляем текст услуги
-            return { ...prevInfo, services: updatedServices };
+            return {...prevInfo, services: updatedServices};
         });
     };
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Collected data:", { hasHotel, hotelLink, hotelInfo });
-        alert("Данные отправлены!");
+    const handleSubmit = async (e) => {
+        setErrorMessage("");
+        e.preventDefault(); // Предотвращает перезагрузку страницы
+
+        const requestData = {
+            name: hotelInfo.name,
+            address: hotelInfo.address,
+            rooms: hotelInfo.rooms,
+            services: hotelInfo.services, // Услуги передаются как массив
+            comment: hotelInfo.comment,
+        };
+
+        // Отправка запроса на сервер
+        setLoading(true);
+        try {
+            const response = await fetch(`${base_url}/hotel/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            });
+
+            if (!response.ok) {
+                setErrorMessage("Не удалось создать/обновить отель");
+            }
+
+            const data = await response.json();
+
+            // Обработка успешного ответа
+            console.log("Ответ от сервера:", data);
+        } catch (error) {
+            // Обработка ошибок
+            setErrorMessage("Не удалось создать/обновить отель: " + error.message);
+        } finally {
+            setLoading(false);
+        }
     };
+
 
     // Функция для расчета минимальной высоты в зависимости от stage
     const getMinHeight = () => {
@@ -165,9 +199,15 @@ const Form = ({ formRef }) => {
         }
     };
 
+    useEffect(() => {
+        if (!loading) return;
 
+        const interval = setInterval(() => {
+            setDots((prev) => (prev === 3 ? 1 : prev + 1));
+        }, 700);
 
-
+        return () => clearInterval(interval);
+    }, [loading]);
 
     return (
         <section className="vc_row liquid-row-responsive-634d4b2e4273d liquid-row-shadowbox-634d4b2e42751"
@@ -196,7 +236,7 @@ const Form = ({ formRef }) => {
                                         data-parallax-from='{"y":25}'
                                         data-parallax-to='{"y":-80}'
                                         data-parallax-options='{"overflowHidden":false,"ease":"linear","start":"top bottom"}'
-                                        style={{ transform: "translate3d(0px, -18.7745px, 0px)" }}
+                                        style={{transform: "translate3d(0px, -18.7745px, 0px)"}}
                                     >
                                         <figure className="loaded">
                                             <img
@@ -300,7 +340,7 @@ const Form = ({ formRef }) => {
                                             )}
                                             {stage === 3 && (
                                                 <div className="text-style-selector">
-                                                <div className="content">
+                                                    <div className="content">
                                                         {/* Левая часть с чекбоксами */}
                                                         <div className="options">
                                                             <div className="option">
@@ -322,7 +362,7 @@ const Form = ({ formRef }) => {
                                                                     value="neutral"
                                                                     onChange={handleStyleChange}
                                                                 />
-                                                                <label htmlFor="neutralStyle" >Нейтральный</label>
+                                                                <label htmlFor="neutralStyle">Нейтральный</label>
                                                             </div>
                                                             <div className="option">
                                                                 <input
@@ -464,7 +504,8 @@ const Form = ({ formRef }) => {
                                                                     alignItems: "center",
                                                                     gap: "10px"
                                                                 }}>
-                                                                    <button type="button" className="service-button" onClick={addService}>
+                                                                    <button type="button" className="service-button"
+                                                                            onClick={addService}>
                                                                         +
                                                                     </button>
                                                                     {serviceError && <span
@@ -474,7 +515,12 @@ const Form = ({ formRef }) => {
 
                                                         </div>
                                                     </div>
-
+                                                    {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
+                                                    {loading && (
+                                                            <div>
+                                                                Ожидаем ответ от сервера{".".repeat(dots)}
+                                                            </div>
+                                                    )}
                                                     {hasHotel !== null && <button onClick={handlePrevStage}
                                                                                   className="wpcf7-form-control has-spinner wpcf7-submit prev-button"
                                                                                   style={{width: "20%"}}>
