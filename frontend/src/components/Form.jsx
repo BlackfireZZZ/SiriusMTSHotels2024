@@ -3,13 +3,16 @@ import "../Forms.css";
 import "../TextStyleSelector.css"
 import axios from "axios";
 import base_url from "../config";
+import Cookies from "js-cookie";
 
 const Form = ({ formRef }) => {
-    const [stage, setStage] = useState(1);
+    const [stage, setStage] = useState(+Cookies.get("stage") || 1);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
     const [dots, setDots] = useState(1);
+    const [description, setDescription] = useState("");
+    const [comment, setComment] = useState("");
     const [hotelInfo, setHotelInfo] = useState({
         name: "",
         address: "",
@@ -42,6 +45,8 @@ const Form = ({ formRef }) => {
         text = 'Выберите стиль описания отеля';
     } else if (stage === 4) {
         text = 'Заполните информацию о вашем отеле';
+    } else if (stage === 5) {
+        text = 'Внесите правки в описание отеля';
     }
 
     const handleNextStage = async () => {
@@ -91,6 +96,7 @@ const Form = ({ formRef }) => {
 
                 // Переход к следующему этапу
                 setStage((prev) => prev + 1);
+                Cookies.set("stage", stage, {expires: 7});
             } catch (error) {
                 setErrorMessage("Не удалось получить данные: " + error.message);
             } finally {
@@ -98,13 +104,16 @@ const Form = ({ formRef }) => {
             }
         } else {
             setStage((prev) => prev + 1);
+            Cookies.set("stage", stage, {expires: 7});
         }
     };
 
 
     const handlePrevStage = () => {
         setStage((prevStage) => (prevStage === 3 ? 1 : prevStage - 1));
+        Cookies.set("stage", stage, {expires: 7});
     };
+
     const handleHotelInfoChange = (e) => {
         const {name, value} = e.target;
         setHotelInfo((prevInfo) => ({...prevInfo, [name]: value}));
@@ -155,6 +164,7 @@ const Form = ({ formRef }) => {
             rooms: hotelInfo.rooms,
             services: hotelInfo.services, // Услуги передаются как массив
             comment: hotelInfo.comment,
+            description_type: hotelInfo.style,
         };
 
         // Отправка запроса на сервер
@@ -173,9 +183,9 @@ const Form = ({ formRef }) => {
             }
 
             const data = await response.json();
-
-            // Обработка успешного ответа
-            console.log("Ответ от сервера:", data);
+            setDescription(data.description)
+            setStage((prev) => prev + 1);
+            Cookies.set("stage", stage, {expires: 7});
         } catch (error) {
             // Обработка ошибок
             setErrorMessage("Не удалось создать/обновить отель: " + error.message);
@@ -183,6 +193,39 @@ const Form = ({ formRef }) => {
             setLoading(false);
         }
     };
+
+    const handleNewSubmit = async (e) => {
+        setErrorMessage("");
+        setLoading(true);
+        e.preventDefault(); // Предотвращает перезагрузку страницы
+
+        const requestData = {
+            comment: comment
+        }
+        try {
+            const response = await fetch(`${base_url}/conversation/add_message`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            });
+
+            if (!response.ok) {
+                setErrorMessage("Не удалось обновить описание");
+                return;
+            }
+
+            const data = await response.json();
+            setDescription(data.description)
+            setComment("");
+        } catch (error) {
+            // Обработка ошибок
+            setErrorMessage("Не удалось обновить описание: " + error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
 
     // Функция для расчета минимальной высоты в зависимости от stage
@@ -196,6 +239,8 @@ const Form = ({ formRef }) => {
                 return '40vw'; // Минимальная высота для stage 3
             case 4:
                 return '60vw'; // Минимальная высота для stage 4
+            case 5:
+                return '40vw';
         }
     };
 
@@ -330,6 +375,11 @@ const Form = ({ formRef }) => {
                                                         onChange={(e) => setHotelLink(e.target.value)}
                                                     />
                                                     {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
+                                                    {loading && (
+                                                        <div>
+                                                            Ожидаем ответ от сервера{".".repeat(dots)}
+                                                        </div>
+                                                    )}
                                                     <button onClick={handlePrevStage} className="prev-button"
                                                             style={{width: '40%'}}>Назад
                                                     </button>
@@ -546,6 +596,69 @@ const Form = ({ formRef }) => {
                                                     />
                                                 </form>
 
+                                            )}
+                                            {stage === 5 && (
+                                                <form onSubmit={handleNewSubmit} style={{width: '100%'}}>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            gap: "15px",
+                                                            flexWrap: "wrap",
+                                                            justifyContent: "space-between",
+                                                            width: '100%'
+                                                        }}
+                                                    >
+                                                        <div style={{flex: "1 1 calc(50% - 15px)"}}>
+                                                            <p>Описание отеля</p>
+                                                            <textarea
+                                                                onChange={(e) => setDescription(e.target.value)}
+                                                                name="description"
+                                                                cols={10}
+                                                                rows={5}
+                                                                style={{width: "100%"}}
+                                                                value={description}
+                                                            />
+                                                        </div>
+
+                                                        <div style={{flex: "1 1 calc(50% - 15px)"}}>
+                                                            <p>Внесите ваши правки</p>
+                                                            <textarea
+                                                                name="edits"
+                                                                value={comment}
+                                                                onChange={(e) => setComment(e.target.value)}
+                                                                cols={10}
+                                                                rows={5}
+                                                                style={{width: "100%"}}
+                                                                placeholder="Ваши правки"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
+                                                    {loading && (
+                                                        <div>
+                                                            Ожидаем ответ от сервера{".".repeat(dots)}
+                                                        </div>
+                                                    )}
+
+                                                    <input
+                                                        type="submit"
+                                                        value="Внести правки"
+                                                        className="wpcf7-form-control has-spinner wpcf7-submit"
+                                                        style={{
+                                                            position: "relative",
+                                                            left: "10px",
+                                                            backgroundColor: "#ff0032ff",
+                                                            borderColor: "#ff0032ff",
+                                                            borderRadius: "50px",
+                                                            padding: "10px 20px",
+                                                            margin: "15px 10px",
+                                                            width: "20%",
+                                                            height: "60px",
+                                                            display: "block",
+                                                        }}
+                                                    />
+                                                </form>
                                             )}
                                         </div>
 

@@ -18,8 +18,8 @@ const KeyWords = () => {
                                 <div className="iconbox-icon-wrap"><span className="iconbox-icon-container"><i
                                     className="lqd-icn-ess icon-lqd-check"/></span></div>
                                 <div className="contents">
-                                    <h3 className="font-weight-bold">Большие объёмы</h3>
-                                    <p>Поможем изучить <b>все</b> отзывы на ваш курс</p>
+                                    <h3 className="font-weight-bold">Избавим от рутины</h3>
+                                    <p>Поможем <b>сэкономить</b> ваше время</p>
                                 </div>
                             </div>
                         </div>
@@ -37,7 +37,7 @@ const KeyWords = () => {
                                 <div className="iconbox-icon-wrap"><span className="iconbox-icon-container"><i
                                     className="lqd-icn-ess icon-lqd-compass"/></span></div>
                                 <div className="contents">
-                                    <h3 className="font-weight-bold">Лёгкий анализ</h3>
+                                    <h3 className="font-weight-bold">Использовать может каждый</h3>
                                     <p>Проанализируем отзывы и расскажем вам о <b>сильных и слабых</b> сторонах курса</p>
                                 </div>
                             </div>
