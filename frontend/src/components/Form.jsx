@@ -66,7 +66,7 @@ const Form = ({ formRef }) => {
             // Отправка запроса на сервер
             setLoading(true);
             try {
-                const response = await fetch(`${base_url}/parcing/parce`, {
+                const response = await fetch(`${base_url}/parse`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -86,6 +86,7 @@ const Form = ({ formRef }) => {
                     ...prev,
                     name: data.name,
                     address: data.address,
+                    services: data.services,
                 }));
 
                 // Переход к следующему этапу

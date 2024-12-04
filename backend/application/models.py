@@ -3,6 +3,23 @@ from application import db
 from datetime import datetime
 
 
+class Service(db.Model):
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = db.Column(db.String(100), nullable=False)
+    hotel_id = db.Column(db.String(36), db.ForeignKey('hotel.id'), nullable=False)
+
+    def __init__(self, name: str, hotel_id: str):
+        self.name = name
+        self.hotel_id = hotel_id
+
+    def to_dict(self):
+        """Возвращает сервис в виде словаря."""
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
+
 class Hotel(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String(100), nullable=False)
@@ -10,9 +27,22 @@ class Hotel(db.Model):
     lon = db.Column(db.Float, nullable=False)
     lat = db.Column(db.Float, nullable=False)
     rooms = db.Column(db.Integer, nullable=False, default=1)
-    stars = db.Column(db.Integer, nullable=False, default=1)
     description_type = db.Column(db.Integer, nullable=True, default=0)
-    description = db.Column(db.Text, nulable=True)
+    description = db.Column(db.Text, nullable=True)
+
+    def get_services(self):
+        """Возвращает все сервисы в отеле в виде словаря."""
+        return {
+            "services": [
+                service.to_dict() for service in self.services
+            ]
+        }
+
+    def clean_services(self):
+        """Удаляет все сервисы в отеле."""
+        for service in self.services:
+            db.session.delete(service)
+        db.session.commit()
 
     def to_dict(self):
         """Возвращает отель в виде словаря."""
@@ -23,7 +53,8 @@ class Hotel(db.Model):
             "lon": self.lon,
             "lat": self.lat,
             "rooms": self.rooms,
-            "stars": self.stars
+            "stars": self.stars,
+            "services": self.get_services()
         }
 
 

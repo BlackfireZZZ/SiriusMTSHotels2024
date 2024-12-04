@@ -1,4 +1,4 @@
-from application import *
+from application import db, app
 from application.handle_conversation.conversation_routes import conversation_blueprint
 
 app.register_blueprint(conversation_blueprint, url_prefix='/conversation')

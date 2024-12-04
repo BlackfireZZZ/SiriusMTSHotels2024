@@ -5,6 +5,7 @@ services:
     container_name: SiriusApp
     environment:
       POSTGRES_CONN: ${POSTGRES_CONN}
+      API_KEY: ${API_KEY}
     ports:
       - "8080:8080"
     volumes:

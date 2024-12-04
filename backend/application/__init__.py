@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from maps.google_maps import GoogleMaps
+from application.maps.google_maps import GoogleMaps
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

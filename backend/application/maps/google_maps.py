@@ -1,5 +1,5 @@
+import os
 from typing import List, Tuple
-from app import MapsClient
 import googlemaps
 
 from typing import Optional
@@ -66,9 +66,9 @@ class GoogleMaps:
         if geocode_result:
             # Получаем координаты из первого результата
             location = geocode_result[0]['geometry']['location']
-            latitude = location['lat']
             longitude = location['lng']
-            return latitude, longitude
+            latitude = location['lat']
+            return longitude, latitude
         return None
 
     def find_nearest(self, latitude: float, longitude: float, my_type: str or List[str], radius: int = 1000) -> List[TravelPlace]:
@@ -99,7 +99,7 @@ class GoogleMaps:
 
 # Пример использования
 if __name__ == '__main__':
-    gmaps_client = MapsClient
+    gmaps_client = GoogleMaps(os.getenv('API_KEY'))
 
     # lon, lat = gmaps_client.find_coordinates_by_address('Мясницкая улица, 14/2с1')
     # print(lon, lat)
