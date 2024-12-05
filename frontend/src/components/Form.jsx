@@ -4,6 +4,7 @@ import "../TextStyleSelector.css"
 import axios from "axios";
 import base_url from "../config";
 import Cookies from "js-cookie";
+import VoiceToText from "./VoiceToText";
 
 const Form = ({ formRef }) => {
     const [stage, setStage] = useState(+Cookies.get("stage") || 1);
@@ -48,6 +49,20 @@ const Form = ({ formRef }) => {
     } else if (stage === 5) {
         text = 'Внесите правки в описание отеля';
     }
+
+    const handleHotelCommentDetected = (text) => {
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            comment: `${prevInfo.comment} ${text}`.trim(),
+        }));
+    };
+
+    const handleCommentDetected = (text) => {
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            comment: `${prevInfo.comment} ${text}`.trim(),
+        }));
+    };
 
     const handleNextStage = async () => {
         if (stage === 2) {
@@ -501,11 +516,15 @@ const Form = ({ formRef }) => {
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            <span className="wpcf7-form-control-wrap"
-                                                                  data-name="textarea-312">
-                                                                <p>
-                                                                    Дополнительная информация
-                                                                </p>
+                                                            <span
+                                                                className="wpcf7-form-control-wrap"
+                                                                data-name="textarea-312"
+                                                                style={{
+                                                                    position: "relative",
+                                                                    display: "block"
+                                                                }} // Контейнер для относительного позиционирования
+                                                            >
+                                                                <p>Дополнительная информация</p>
                                                                 <textarea
                                                                     onChange={(e) =>
                                                                         setHotelInfo((prevInfo) => ({
@@ -521,8 +540,28 @@ const Form = ({ formRef }) => {
                                                                     aria-invalid="false"
                                                                     placeholder="Ваш комментарий"
                                                                     value={hotelInfo.comment}
+                                                                    style={{
+                                                                        width: "100%", // Растянуть поле по ширине
+                                                                        boxSizing: "border-box", // Учитывать padding
+                                                                        position: "relative", // Необязательное позиционирование для текстового поля
+                                                                    }}
                                                                 />
+                                                                <div style={{
+                                                                    position: "absolute", // Абсолютное позиционирование внутри контейнера
+                                                                    bottom: "10px", // Отступ от нижнего края
+                                                                    right: "10px", // Отступ от правого края
+                                                                    cursor: "pointer",
+                                                                    width: '45px',
+                                                                    height: '45px',
+                                                                }}>
+                                                                <VoiceToText
+                                                                    onTextDetected={handleCommentDetected}
+
+                                                                />
+                                                            </div>
                                                             </span>
+
+
                                                         </div>
                                                         <div className="form-right">
 
@@ -632,6 +671,19 @@ const Form = ({ formRef }) => {
                                                                 style={{width: "100%"}}
                                                                 placeholder="Ваши правки"
                                                             />
+                                                            <div style={{
+                                                                position: "absolute", // Абсолютное позиционирование внутри контейнера
+                                                                bottom: "10px", // Отступ от нижнего края
+                                                                right: "10px", // Отступ от правого края
+                                                                padding: "5px 10px",
+                                                                cursor: "pointer",
+                                                            }}>
+                                                                <VoiceToText
+                                                                    onTextDetected={handleCommentDetected}
+
+                                                                />
+                                                            </div>
+
                                                         </div>
                                                     </div>
 
