@@ -19,7 +19,9 @@ const KeyWords = () => {
                                     className="lqd-icn-ess icon-lqd-check"/></span></div>
                                 <div className="contents">
                                     <h3 className="font-weight-bold">Избавим от рутины</h3>
-                                    <p>Поможем <b>сэкономить</b> ваше время</p>
+                                    <p>Вам достаточно дать нам ссылку на сайт, и самые важные факты об отеле -
+                                    <b> остальное за нами</b>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +40,8 @@ const KeyWords = () => {
                                     className="lqd-icn-ess icon-lqd-compass"/></span></div>
                                 <div className="contents">
                                     <h3 className="font-weight-bold">Использовать может каждый</h3>
-                                    <p>Проанализируем отзывы и расскажем вам о <b>сильных и слабых</b> сторонах курса</p>
+                                    <p>Придельно <b>понятный</b> интерфейс, адаптированныый под людей с ОВЗ.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -56,8 +59,10 @@ const KeyWords = () => {
                                 <div className="iconbox-icon-wrap"><span className="iconbox-icon-container"><i
                                     className="lqd-icn-ess icon-ld-cart"/></span></div>
                                 <div className="contents">
-                                    <h3 className="font-weight-bold">Простота использования</h3>
-                                    <p>Вставьте текст или загрузите файл - <b>остальное за нами</b></p>
+                                    <h3 className="font-weight-bold">Гибкость решения.</h3>
+                                    <p>Возможность <b>редактировать</b> описание вашего отеля как в ручную, так
+                                    и с помощью комментариев.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -75,14 +80,15 @@ const KeyWords = () => {
                                 <div className="iconbox-icon-wrap"><span className="iconbox-icon-container"><i
                                     className="lqd-icn-ess icon-lqd-laptop"/></span></div>
                                 <div className="contents">
-                                    <h3 className="font-weight-bold">Кроссплатформенность</h3>
-                                    <p>Мы предоставляем <b>интеграцию</b> в крупные образовательные платформы</p>
+                                    <h3 className="font-weight-bold">Подчеркнем важное</h3>
+                                    <p>Найдем <b>ключевые преимущества</b> вашего отеля и покажем пользователю.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }

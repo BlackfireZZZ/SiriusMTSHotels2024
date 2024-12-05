@@ -6,6 +6,7 @@ services:
     environment:
       POSTGRES_CONN: ${POSTGRES_CONN}
       API_KEY: ${API_KEY}
+      SBER_TOKEN: ${SBER_TOKEN}
     ports:
       - "8080:8080"
     volumes:

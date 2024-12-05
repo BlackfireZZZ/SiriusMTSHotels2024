@@ -9,6 +9,7 @@ import UsedTech from "./components/UsedTech";
 import AboutUs from "./components/AboutUs";
 import base_url from "./config";
 import axios from "axios";
+import TextToSpeechPlayer from "./components/TextToSpeechPlayer";
 
 
 function App() {
@@ -196,12 +197,12 @@ function App() {
                                    className="lqd-imggrp-single ld_images_group_element_634d4b2e17463">
                                 <div className="lqd-imggrp-img-container">
                                   <figure className="loaded"><img width={658} height={727}
-                                                                  src="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x.png"
+                                                                  src={require('./assets/3d.png')}
                                                                   className="ld-lazyload entered loaded" alt=""
-                                                                  data-src="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x.png"
-                                                                  data-srcset="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x-272x300.png 272w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x-927x1024.png 927w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x.png 1316w"
+                                                                  data-src={require('./assets/3d.png')}
+                                                                  data-srcset={require('./assets/3d.png')}
                                                                   data-aspect data-ll-status="loaded"
-                                                                  srcSet="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x-272x300.png 272w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x-927x1024.png 927w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/10/Images@2x.png 1316w"/>
+                                                                  srcSet={require('./assets/3d.png')}/>
                                   </figure>
                                 </div>
                               </div>

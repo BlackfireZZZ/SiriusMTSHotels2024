@@ -173,13 +173,14 @@ const AboutTeam = () => {
                                             <div className="lqd-imggrp-img-container" data-parallax="true"
                                                  data-parallax-options="{&quot;overflowHidden&quot;:true,&quot;ease&quot;:&quot;linear&quot;,&quot;start&quot;:&quot;top bottom&quot;}">
                                                 <figure className="loaded"><img width={405} height={491}
-                                                                                src="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x.jpg"
+                                                                                src={require('../assets/girls.png')}
                                                                                 className="ld-lazyload entered loaded"
                                                                                 alt=""
-                                                                                data-src="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x.jpg"
-                                                                                data-srcset="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x-247x300.jpg 247w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x.jpg 810w"
+                                                                                data-src={require('../assets/girls.png')}
+                                                                                data-srcset={require('../assets/girls.png')}
                                                                                 data-aspect data-ll-status="loaded"
-                                                                                srcSet="https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x-247x300.jpg 247w, https://multiusepro.liquid-themes.com/wp-content/uploads/2020/09/contain-2@2x.jpg 810w"/>
+                                                                                srcSet={require('../assets/girls.png')}
+                                                />
                                                 </figure>
                                             </div>
                                         </div>

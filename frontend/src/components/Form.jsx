@@ -138,6 +138,7 @@ const Form = ({ formRef }) => {
 
 // Функция удаления услуги по индексу
     const removeService = (index) => {
+        setServiceError("");
         setHotelInfo((prevInfo) => ({
             ...prevInfo,
             services: prevInfo.services.filter((_, i) => i !== index), // Удаляем услугу

@@ -1,8 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
+import TextToSpeechPlayer from "./TextToSpeechPlayer";
 
 
 
 const Header = ({techRef, aboutUsRef, formRef}) => {
+    const [isPlayerVisible, setIsPlayerVisible] = useState(false);
+
+    const togglePlayerVisibility = () => {
+        setIsPlayerVisible((prev) => !prev);
+    };
+
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -32,6 +39,7 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
 
     return (
         <div className="lqd-head-sec container-fluid d-flex align-items-stretch">
+
             <div className="col lqd-head-col  ">
                 <div className="header-module module-primary-nav pos-stc">
                     <div className="collapse navbar-collapse lqd-submenu-cover  " id="main-header-collapse"
@@ -87,7 +95,7 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
                                     margin: '15px 5px', // Отступы сверху и снизу
                                     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                                     cursor: 'pointer',
-                            }}
+                                }}
                                 onMouseEnter={(e) => {
                                     e.target.style.transform = 'scale(0.95)';
                                 }}
@@ -104,19 +112,20 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
                                 </a>
                             </li>
                             <li id="menu-item-12"
-                                className="menu-item menu-item-type-custom menu-item-object-custom menu-item-11" style={{
-                                height: '50px',
-                                display: 'flex', // Используем flex для центровки
-                                justifyContent: 'center', // Горизонтальная центровка
-                                alignItems: 'center', // Вертикальная центровка
-                                padding: '10px 20px',
-                                backgroundColor: '#fff',
-                                borderRadius: '50px',
-                                boxShadow: '0 3px 40px rgba(0, 0, 0, 0.08)',
-                                margin: '15px 5px', // Отступы сверху и снизу
-                                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                                cursor: 'pointer',
-                            }}
+                                className="menu-item menu-item-type-custom menu-item-object-custom menu-item-11"
+                                style={{
+                                    height: '50px',
+                                    display: 'flex', // Используем flex для центровки
+                                    justifyContent: 'center', // Горизонтальная центровка
+                                    alignItems: 'center', // Вертикальная центровка
+                                    padding: '10px 20px',
+                                    backgroundColor: '#fff',
+                                    borderRadius: '50px',
+                                    boxShadow: '0 3px 40px rgba(0, 0, 0, 0.08)',
+                                    margin: '15px 5px', // Отступы сверху и снизу
+                                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                    cursor: 'pointer',
+                                }}
                                 onMouseEnter={(e) => {
                                     e.target.style.transform = 'scale(0.95)';
                                 }}
@@ -126,7 +135,45 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
                                 <a onClick={scrollToTech} style={{
                                     color: '#002352',
                                     textDecoration: 'none',
-                                }}>О разработке</a></li>
+                                }}>О разработке</a>
+                            </li>
+                            <li id="menu-item-12"
+                                className="menu-item menu-item-type-custom menu-item-object-custom menu-item-11"
+                                style={{
+                                    height: '50px',
+                                    display: 'flex', // Используем flex для центровки
+                                    justifyContent: 'center', // Горизонтальная центровка
+                                    alignItems: 'center', // Вертикальная центровка
+                                    padding: '10px 20px',
+                                    backgroundColor: '#fff',
+                                    borderRadius: '50px',
+                                    boxShadow: '0 3px 40px rgba(0, 0, 0, 0.08)',
+                                    margin: '15px 5px', // Отступы сверху и снизу
+                                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                    cursor: 'pointer',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.transform = 'scale(0.95)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.transform = 'scale(1)';
+                                }}>
+                                <a onClick={togglePlayerVisibility} style={{
+                                    color: '#002352',
+                                    textDecoration: 'none',
+                                }}>Озвучить текст</a>
+                            </li>
+                            {isPlayerVisible && (
+                                <div
+                                    style={{
+                                        position: "relative",
+                                        zIndex: 1000, // чтобы плеер был поверх других элементов
+                                        width: '300px'
+                                    }}
+                                >
+                                    <TextToSpeechPlayer />
+                                </div>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -138,7 +185,8 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
                         onClick={scrollToForm}
                         style={{cursor: 'pointer'}}>
                     <span>
-                      <span className="btn-txt" data-text="Start a project" style={{color: 'white'}}>Начать сейчас</span>
+                      <span className="btn-txt" data-text="Start a project"
+                            style={{color: 'white'}}>Начать сейчас</span>
                     </span>
                     </a>
                 </div>
