@@ -3,6 +3,7 @@ from flask import request, jsonify, send_file
 from application import app
 from application.parsing import parser
 from application.config import Config
+from application.parsing.ostorovok_parsing import main
 import urllib3
 
 
@@ -15,7 +16,8 @@ def response_ping():
 def parse():
     data = request.json
     url = data['url']
-    return jsonify(parser.parse(url).to_dict())
+    data = main(url)
+    return jsonify(data)
 
 
 @app.route('/speech_to_text', methods=['POST'])
