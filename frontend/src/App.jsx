@@ -13,6 +13,7 @@ import TextToSpeechPlayer from "./components/TextToSpeechPlayer";
 
 
 function App() {
+  const [description, setDescription] = useState("");
   const [sessionId, setSessionId] = useState(null);
   const [conversationCreated, setConversationCreated] = useState(false);
   useEffect(() => {
@@ -61,7 +62,7 @@ function App() {
                   data-sticky-values-measured="true" data-sticky-options="{&quot;disableOnMobile&quot;:true}"
                   id="header" itemScope="itemscope" itemType="http://schema.org/WPHeader">
             <div className="lqd-head-sec-wrap pos-rel    vc_custom_1579164823599 ">
-              <Header techRef={techRef} aboutUsRef={aboutUsRef} formRef={formRef}/>
+              <Header techRef={techRef} aboutUsRef={aboutUsRef} formRef={formRef} description={description}/>
             </div>
             <div className="lqd-mobile-sec">
               <div className="lqd-mobile-sec-inner navbar-header d-flex align-items-stretch">
@@ -221,7 +222,7 @@ function App() {
                   </div>
                 </div>
               </section>
-              <Form formRef={formRef}/>
+              <Form formRef={formRef} description={description} setDescription={setDescription}/>
 
               <section data-custom-animations="true"
                        data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;.wpb_column&quot;,&quot;duration&quot;:&quot;1800&quot;,&quot;delay&quot;:&quot;180&quot;,&quot;ease&quot;:&quot;power4.out&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;opacity&quot;:0},&quot;animations&quot;:{&quot;opacity&quot;:1}}"

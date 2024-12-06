@@ -3,7 +3,7 @@ import TextToSpeechPlayer from "./TextToSpeechPlayer";
 
 
 
-const Header = ({techRef, aboutUsRef, formRef}) => {
+const Header = ({techRef, aboutUsRef, formRef, description}) => {
     const [isPlayerVisible, setIsPlayerVisible] = useState(false);
 
     const togglePlayerVisibility = () => {
@@ -171,7 +171,7 @@ const Header = ({techRef, aboutUsRef, formRef}) => {
                                         width: '300px'
                                     }}
                                 >
-                                    <TextToSpeechPlayer />
+                                    <TextToSpeechPlayer description={description}/>
                                 </div>
                             )}
                         </ul>

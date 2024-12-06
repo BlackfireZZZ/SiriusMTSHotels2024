@@ -1,10 +1,8 @@
 import requests
-from flask import request, jsonify, send_file
+from flask import request, jsonify
 from application import app
-from application.parsing import parser
-from application.config import Config
 from application.parsing.ostorovok_parsing import main
-import urllib3
+from application.SBER_VOICE import main as get_token
 import json
 
 
@@ -31,7 +29,7 @@ def parse():
 def synthesize():
     try:
         text = request.json['text']
-        token = Config.SBER_TOKEN
+        token = get_token()
         # Синтез текста в речь
         synth_url = "https://smartspeech.sber.ru/rest/v1/text:synthesize?format=wav16&voice=May_24000"
         synth_headers = {
@@ -50,4 +48,5 @@ def synthesize():
         }
 
     except Exception as e:
+        app.logger.error(e)
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500

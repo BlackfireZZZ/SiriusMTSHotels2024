@@ -10,14 +10,13 @@ import Stage3 from "./Stage3";
 import Stage5 from "./Stage5";
 import ChatWithModel from "./ChatWithModel";
 
-const Form = ({ formRef }) => {
+const Form = ({ formRef, description, setDescription }) => {
     // const [stage, setStage] = useState(+Cookies.get("stage") || 1);
     const [stage, setStage] = useState(1);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
     const [dots, setDots] = useState(1);
-    const [description, setDescription] = useState("");
     const [hotelInfo, setHotelInfo] = useState({
         name: "",
         address: "",

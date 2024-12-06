@@ -1,12 +1,15 @@
 import React, {useState, useRef, useEffect} from "react";
 import base_url from "../config";
 
-const TextToSpeechPlayer = () => {
+const TextToSpeechPlayer = ({description}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const audioRef = useRef(null);
+    const requestBody = {
+        text: description === "" ? getAllTextFromPage() : description,
+    };
 
     const fetchAudio = async () => {
         if (audioUrl || isLoading) return; // Избегаем повторного запроса, если аудио уже есть или в процессе загрузки
@@ -21,7 +24,7 @@ const TextToSpeechPlayer = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({text: getAllTextFromPage()}),
+                body: JSON.stringify(requestBody),
             });
 
             if (!response.ok) {
