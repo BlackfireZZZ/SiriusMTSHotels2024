@@ -5,15 +5,19 @@ import axios from "axios";
 import base_url from "../config";
 import Cookies from "js-cookie";
 import VoiceToText from "./VoiceToText";
+import AddFile from "./AddFile";
+import Stage3 from "./Stage3";
+import Stage5 from "./Stage5";
+import ChatWithModel from "./ChatWithModel";
 
 const Form = ({ formRef }) => {
-    const [stage, setStage] = useState(+Cookies.get("stage") || 1);
+    // const [stage, setStage] = useState(+Cookies.get("stage") || 1);
+    const [stage, setStage] = useState(6);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
     const [dots, setDots] = useState(1);
     const [description, setDescription] = useState("");
-    const [comment, setComment] = useState("");
     const [hotelInfo, setHotelInfo] = useState({
         name: "",
         address: "",
@@ -21,21 +25,44 @@ const Form = ({ formRef }) => {
         comment: "",
         style: "formal",
         services: [], // Новый массив для хранения списка услуг
+        files: [], // Новый список для фото
     });
+    const [fileError, setFileError] = useState("");
 
     const [errorMessage, setErrorMessage] = useState("");
-    const [serviceError, setServiceError] = useState(""); // Состояние для ошибки услуг
 
-    const exampleText = {
-        formal: "We cordially invite you to partake in our exquisite event, designed to leave an indelible mark upon your esteemed experience.",
-        neutral: "Join us for an event that promises to be both enjoyable and memorable.",
-        informal: "Hey, come hang out with us! It's going to be fun, promise!",
-    };
+
 
     const handleStyleChange = (event) => {
         const newStyle = event.target.value;
         setHotelInfo((prev) => ({...prev, style: newStyle}));
     };
+
+    const handleFileAdd = (event) => {
+        const newFile = event.target.files[0];
+        if (!newFile) return;
+
+        if (hotelInfo.files.length >= 10) {
+            setFileError("Максимум 10 файлов.");
+            return;
+        }
+
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            files: [...prevInfo.files, newFile],
+        }));
+
+        setFileError(""); // Очистить ошибку, если файл успешно добавлен
+    };
+
+    const handleFileRemove = (index) => {
+        setFileError("");
+        setHotelInfo((prevInfo) => ({
+            ...prevInfo,
+            files: prevInfo.files.filter((_, i) => i !== index),
+        }));
+    };
+
 
     let text;
     if (stage === 1) {
@@ -45,24 +72,16 @@ const Form = ({ formRef }) => {
     } else if (stage === 3) {
         text = 'Выберите стиль описания отеля';
     } else if (stage === 4) {
-        text = 'Заполните информацию о вашем отеле';
+        text = 'Добавьте фото вашего отеля'
     } else if (stage === 5) {
+        text = 'Заполните информацию о вашем отеле';
+    } else if (stage === 6) {
         text = 'Внесите правки в описание отеля';
     }
 
-    const handleHotelCommentDetected = (text) => {
-        setHotelInfo((prevInfo) => ({
-            ...prevInfo,
-            comment: `${prevInfo.comment} ${text}`.trim(),
-        }));
-    };
 
-    const handleCommentDetected = (text) => {
-        setHotelInfo((prevInfo) => ({
-            ...prevInfo,
-            comment: `${prevInfo.comment} ${text}`.trim(),
-        }));
-    };
+
+
 
     const handleNextStage = async () => {
         if (stage === 2) {
@@ -129,119 +148,7 @@ const Form = ({ formRef }) => {
         Cookies.set("stage", stage, {expires: 7});
     };
 
-    const handleHotelInfoChange = (e) => {
-        const {name, value} = e.target;
-        setHotelInfo((prevInfo) => ({...prevInfo, [name]: value}));
-    };
 
-    // Функция добавления услуги
-    const addService = () => {
-        // Проверяем, есть ли пустая услуга
-        if (hotelInfo.services.length > 0 && hotelInfo.services[hotelInfo.services.length - 1] === "") {
-            setServiceError("Пустая услуга");
-            return;
-        }
-
-        // Убираем ошибку и добавляем новую пустую услугу
-        setServiceError("");
-        setHotelInfo((prevInfo) => ({
-            ...prevInfo,
-            services: [...prevInfo.services, ""],
-        }));
-    };
-
-
-// Функция удаления услуги по индексу
-    const removeService = (index) => {
-        setServiceError("");
-        setHotelInfo((prevInfo) => ({
-            ...prevInfo,
-            services: prevInfo.services.filter((_, i) => i !== index), // Удаляем услугу
-        }));
-    };
-
-// Функция обновления текста услуги
-    const updateService = (index, value) => {
-        setHotelInfo((prevInfo) => {
-            const updatedServices = [...prevInfo.services];
-            updatedServices[index] = value; // Обновляем текст услуги
-            return {...prevInfo, services: updatedServices};
-        });
-    };
-
-
-    const handleSubmit = async (e) => {
-        setErrorMessage("");
-        e.preventDefault(); // Предотвращает перезагрузку страницы
-
-        const requestData = {
-            name: hotelInfo.name,
-            address: hotelInfo.address,
-            rooms: hotelInfo.rooms,
-            services: hotelInfo.services, // Услуги передаются как массив
-            comment: hotelInfo.comment,
-            description_type: hotelInfo.style,
-        };
-
-        // Отправка запроса на сервер
-        setLoading(true);
-        try {
-            const response = await fetch(`${base_url}/hotel/create`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestData),
-            });
-
-            if (!response.ok) {
-                setErrorMessage("Не удалось создать/обновить отель");
-            }
-
-            const data = await response.json();
-            setDescription(data.description)
-            setStage((prev) => prev + 1);
-            Cookies.set("stage", stage, {expires: 7});
-        } catch (error) {
-            // Обработка ошибок
-            setErrorMessage("Не удалось создать/обновить отель: " + error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleNewSubmit = async (e) => {
-        setErrorMessage("");
-        setLoading(true);
-        e.preventDefault(); // Предотвращает перезагрузку страницы
-
-        const requestData = {
-            comment: comment
-        }
-        try {
-            const response = await fetch(`${base_url}/conversation/add_message`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestData),
-            });
-
-            if (!response.ok) {
-                setErrorMessage("Не удалось обновить описание");
-                return;
-            }
-
-            const data = await response.json();
-            setDescription(data.description)
-            setComment("");
-        } catch (error) {
-            // Обработка ошибок
-            setErrorMessage("Не удалось обновить описание: " + error.message);
-        } finally {
-            setLoading(false);
-        }
-    }
 
 
     // Функция для расчета минимальной высоты в зависимости от stage
@@ -254,8 +161,10 @@ const Form = ({ formRef }) => {
             case 3:
                 return '40vw'; // Минимальная высота для stage 3
             case 4:
-                return '60vw'; // Минимальная высота для stage 4
+                return '40vw'; // Минимальная высота для stage 4
             case 5:
+                return '60vw'; // Минимальная высота для stage 4
+            case 6:
                 return '40vw';
         }
     };
@@ -405,313 +314,29 @@ const Form = ({ formRef }) => {
                                                 </div>
                                             )}
                                             {stage === 3 && (
-                                                <div className="text-style-selector">
-                                                    <div className="content">
-                                                        {/* Левая часть с чекбоксами */}
-                                                        <div className="options">
-                                                            <div className="option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="textStyle"
-                                                                    id="formalStyle"
-                                                                    value="formal"
-                                                                    onChange={handleStyleChange}
-                                                                    defaultChecked
-                                                                />
-                                                                <label htmlFor="formalStyle">Официальный</label>
-                                                            </div>
-                                                            <div className="option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="textStyle"
-                                                                    id="neutralStyle"
-                                                                    value="neutral"
-                                                                    onChange={handleStyleChange}
-                                                                />
-                                                                <label htmlFor="neutralStyle">Нейтральный</label>
-                                                            </div>
-                                                            <div className="option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="textStyle"
-                                                                    id="informalStyle"
-                                                                    value="informal"
-                                                                    onChange={handleStyleChange}
-                                                                />
-                                                                <label htmlFor="informalStyle">Неформальный</label>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Правая часть с текстом */}
-                                                        <div className="example-text">
-                                                            <p>{exampleText[hotelInfo.style]}</p>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Кнопки */}
-                                                    <div className="buttons">
-                                                        <button
-                                                            onClick={handlePrevStage}
-                                                            className="prev-button text-style-button"
-                                                            style={{width: "100px"}}
-                                                        >
-                                                            Назад
-                                                        </button>
-                                                        <button
-                                                            onClick={handleNextStage}
-                                                            className="prev-button text-style-button"
-                                                            style={{width: "100px"}}
-                                                        >
-                                                            Далее
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <Stage3 hotelInfo={hotelInfo} handleStyleChange={handleStyleChange}
+                                                handlePrevStage={handlePrevStage} handleNextStage={handleNextStage}/>
                                             )}
 
                                             {stage === 4 && (
-                                                <form onSubmit={handleSubmit}>
-                                                    <div className="form-container">
-                                                        <div className="form-left" style={{width: '900px'}}>
-                                                            <div className="form-row">
-                                                                <div style={{width: '100%'}}>
-                                                                    <label style={{width: '100%'}}>
-                                                                        Название:
-                                                                        <input
-                                                                            type="text"
-                                                                            name="name"
-                                                                            value={hotelInfo.name}
-                                                                            onChange={handleHotelInfoChange}
-                                                                            style={{width: '100%'}}
-                                                                            required
-                                                                        />
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div className="form-row">
-                                                                <div>
-                                                                    <label>
-                                                                        Адрес:
-                                                                        <input
-                                                                            type="text"
-                                                                            name="address"
-                                                                            value={hotelInfo.address}
-                                                                            onChange={handleHotelInfoChange}
-                                                                            required
-                                                                        />
-                                                                    </label>
-                                                                </div>
-                                                                <div style={{width: '100px'}}>
-                                                                    <label style={{width: '100%'}}>
-                                                                        Количество номеров:
-                                                                        <input
-                                                                            type="number"
-                                                                            name="rooms"
-                                                                            min="1"
-                                                                            max="1000"
-                                                                            value={hotelInfo.rooms}
-                                                                            onChange={handleHotelInfoChange}
-                                                                            style={{width: '100%'}}
-                                                                            required
-                                                                        />
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <span
-                                                                className="wpcf7-form-control-wrap"
-                                                                data-name="textarea-312"
-                                                                style={{
-                                                                    position: "relative",
-                                                                    display: "block"
-                                                                }} // Контейнер для относительного позиционирования
-                                                            >
-                                                                <p>Дополнительная информация</p>
-                                                                <textarea
-                                                                    onChange={(e) =>
-                                                                        setHotelInfo((prevInfo) => ({
-                                                                            ...prevInfo,
-                                                                            comment: e.target.value,
-                                                                        }))
-                                                                    }
-                                                                    name="textarea-312"
-                                                                    cols={10}
-                                                                    rows={5}
-                                                                    className="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required"
-                                                                    aria-required="true"
-                                                                    aria-invalid="false"
-                                                                    placeholder="Ваш комментарий"
-                                                                    value={hotelInfo.comment}
-                                                                    style={{
-                                                                        width: "100%", // Растянуть поле по ширине
-                                                                        boxSizing: "border-box", // Учитывать padding
-                                                                        position: "relative", // Необязательное позиционирование для текстового поля
-                                                                    }}
-                                                                />
-                                                                <div style={{
-                                                                    position: "absolute", // Абсолютное позиционирование внутри контейнера
-                                                                    bottom: "10px", // Отступ от нижнего края
-                                                                    right: "10px", // Отступ от правого края
-                                                                    cursor: "pointer",
-                                                                    width: '45px',
-                                                                    height: '45px',
-                                                                }}>
-                                                                <VoiceToText
-                                                                    onTextDetected={handleCommentDetected}
-
-                                                                />
-                                                            </div>
-                                                            </span>
-
-
-                                                        </div>
-                                                        <div className="form-right">
-
-                                                            <div>
-                                                                <p>Услуги отеля</p>
-                                                                <div className="services-container">
-                                                                    {hotelInfo.services.map((service, index) => (
-                                                                        <div key={index} className="service-item">
-                                                                            {/* Поле ввода для услуги */}
-                                                                            <input
-                                                                                type="text"
-                                                                                value={service}
-                                                                                onChange={(e) => updateService(index, e.target.value)}
-                                                                                placeholder="Введите услугу"
-                                                                            />
-                                                                            {/* Кнопка удаления услуги */}
-                                                                            <button
-                                                                                type="button"
-                                                                                className="delete-button"
-                                                                                onClick={() => removeService(index)}
-                                                                            >
-                                                                                x
-                                                                            </button>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                                {/* Кнопка добавления новой услуги */}
-                                                                <div style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    gap: "10px"
-                                                                }}>
-                                                                    <button type="button" className="service-button"
-                                                                            onClick={addService}>
-                                                                        +
-                                                                    </button>
-                                                                    {serviceError && <span
-                                                                        className="error-message">{serviceError}</span>}
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
-                                                    {loading && (
-                                                            <div>
-                                                                Ожидаем ответ от сервера{".".repeat(dots)}
-                                                            </div>
-                                                    )}
-                                                    {hasHotel !== null && <button onClick={handlePrevStage}
-                                                                                  className="wpcf7-form-control has-spinner wpcf7-submit prev-button"
-                                                                                  style={{width: "20%"}}>
-                                                        Назад
-                                                    </button>}
-                                                    <input
-                                                        type="submit"
-                                                        value="Отправить"
-                                                        className="wpcf7-form-control has-spinner wpcf7-submit"
-                                                        style={{
-                                                            backgroundColor: "#ff0032ff",
-                                                            borderColor: "#ff0032ff",
-                                                            borderRadius: "50px",
-                                                            padding: "10px 20px",
-                                                            position: "relative",
-                                                            bottom: "10px",
-                                                            left: "10px",
-                                                            top: "20px",
-                                                            margin: "5px",
-                                                            width: "20%",
-                                                            height: '60px'
-                                                        }}
-                                                    />
-                                                </form>
-
+                                                <AddFile hotelInfo={hotelInfo} onFileAdd={handleFileAdd}
+                                                         onFileRemove={handleFileRemove} fileError={fileError}
+                                                         handlePrevStage={handlePrevStage} handleNextStage={handleNextStage}
+                                                />
                                             )}
+
                                             {stage === 5 && (
-                                                <form onSubmit={handleNewSubmit} style={{width: '100%'}}>
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            gap: "15px",
-                                                            flexWrap: "wrap",
-                                                            justifyContent: "space-between",
-                                                            width: '100%'
-                                                        }}
-                                                    >
-                                                        <div style={{flex: "1 1 calc(50% - 15px)"}}>
-                                                            <p>Описание отеля</p>
-                                                            <textarea
-                                                                onChange={(e) => setDescription(e.target.value)}
-                                                                name="description"
-                                                                cols={10}
-                                                                rows={5}
-                                                                style={{width: "100%"}}
-                                                                value={description}
-                                                            />
-                                                        </div>
-
-                                                        <div style={{flex: "1 1 calc(50% - 15px)"}}>
-                                                            <p>Внесите ваши правки</p>
-                                                            <textarea
-                                                                name="edits"
-                                                                value={comment}
-                                                                onChange={(e) => setComment(e.target.value)}
-                                                                cols={10}
-                                                                rows={5}
-                                                                style={{width: "100%"}}
-                                                                placeholder="Ваши правки"
-                                                            />
-                                                            <div style={{
-                                                                position: "absolute", // Абсолютное позиционирование внутри контейнера
-                                                                bottom: "10px", // Отступ от нижнего края
-                                                                right: "10px", // Отступ от правого края
-                                                                padding: "5px 10px",
-                                                                cursor: "pointer",
-                                                            }}>
-                                                                <VoiceToText
-                                                                    onTextDetected={handleCommentDetected}
-
-                                                                />
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-
-                                                    {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}
-                                                    {loading && (
-                                                        <div>
-                                                            Ожидаем ответ от сервера{".".repeat(dots)}
-                                                        </div>
-                                                    )}
-
-                                                    <input
-                                                        type="submit"
-                                                        value="Внести правки"
-                                                        className="wpcf7-form-control has-spinner wpcf7-submit"
-                                                        style={{
-                                                            position: "relative",
-                                                            left: "10px",
-                                                            backgroundColor: "#ff0032ff",
-                                                            borderColor: "#ff0032ff",
-                                                            borderRadius: "50px",
-                                                            padding: "10px 20px",
-                                                            margin: "15px 10px",
-                                                            width: "20%",
-                                                            height: "60px",
-                                                            display: "block",
-                                                        }}
-                                                    />
-                                                </form>
+                                                <Stage5 handlePrevStage={handlePrevStage} errorMessage={errorMessage}
+                                                setErrorMessage={setErrorMessage} hotelInfo={hotelInfo}
+                                                setHotelInfo={setHotelInfo} loading={loading} setLoading={setLoading}
+                                                dots={dots} hasHotel={hasHotel} setDescription={setDescription}
+                                                />
+                                            )}
+                                            {stage === 6 && (
+                                                <ChatWithModel errorMessage={errorMessage} setErrorMessage={setErrorMessage}
+                                                               loading={loading} setLoading={setLoading}
+                                                               description={description} setDescription={setDescription}
+                                                               dots={dots}/>
                                             )}
                                         </div>
 

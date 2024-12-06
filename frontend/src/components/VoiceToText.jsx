@@ -49,7 +49,7 @@ const VoiceToText = ({ onTextDetected }) => {
             style={{
                 fontSize: "16px",
                 cursor: "pointer",
-                backgroundColor: isListening ? "#ff6666" : "#00cf32",
+                backgroundColor: isListening ? "#ff6666" : "#173a63",
                 color: "white",
                 border: "none",
                 borderRadius: "20px",
