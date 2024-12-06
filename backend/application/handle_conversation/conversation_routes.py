@@ -1,8 +1,7 @@
 from application.models import Conversation, Message
 from application import db
 from flask import Blueprint, request, jsonify
-from application.LLM.LLM import apply
-
+from application.LLM.LLM import apply, correct
 
 conversation_blueprint = Blueprint('conversation', __name__)
 
@@ -29,7 +28,7 @@ def add_message():
     db.session.add(new_message)
     db.session.commit()
     context = conversation.get_conversation()
-    new_description = apply(None, context)
+    new_description = correct(context)
     bot_message = Message(new_description, '0', conversation_id)  # 0 - автор - бот
     db.session.add(bot_message)
     db.session.commit()

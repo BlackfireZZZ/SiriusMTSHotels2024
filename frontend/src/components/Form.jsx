@@ -12,7 +12,7 @@ import ChatWithModel from "./ChatWithModel";
 
 const Form = ({ formRef }) => {
     // const [stage, setStage] = useState(+Cookies.get("stage") || 1);
-    const [stage, setStage] = useState(6);
+    const [stage, setStage] = useState(1);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
@@ -94,7 +94,7 @@ const Form = ({ formRef }) => {
             }
 
             // Список разрешённых доменов
-            const allowedDomains = ["https://travel.yandex.ru/"];
+            const allowedDomains = ["https://ostrovok.ru/"];
 
             // Проверка, входит ли домен в список доступных
             if (!allowedDomains.some((domain) => hotelLink.startsWith(domain))) {

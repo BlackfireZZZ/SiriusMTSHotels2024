@@ -54,18 +54,6 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
                     width: '100%'
                 }}
             >
-                <div style={{flex: "1 1 calc(50% - 15px)"}}>
-                    <p>Описание отеля</p>
-                    <textarea
-                        onChange={(e) => setDescription(e.target.value)}
-                        name="description"
-                        cols={10}
-                        rows={5}
-                        style={{width: "100%"}}
-                        value={description}
-                    />
-                </div>
-
                 <div style={{
                     flex: "1 1 calc(50% - 15px)",
                     position: "relative",
@@ -95,6 +83,19 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
                     </div>
 
                 </div>
+                <div style={{flex: "1 1 calc(50% - 15px)"}}>
+                    <p>Описание отеля</p>
+                    <textarea
+                        onChange={(e) => setDescription(e.target.value)}
+                        name="description"
+                        cols={10}
+                        rows={5}
+                        style={{width: "100%"}}
+                        value={description}
+                    />
+                </div>
+
+
             </div>
 
             {errorMessage && <p style={{color: "red"}}>{errorMessage}</p>}

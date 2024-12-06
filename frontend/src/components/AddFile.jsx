@@ -14,6 +14,7 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                 style={{
                     display: "flex",
                     alignItems: "flex-start",
+                    width: '80vw'
                 }}
             >
                 {/* Левая колонка: Кнопка загрузки */}
@@ -44,8 +45,8 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                                     backgroundColor: "white",
                                     textDecoration: "none",
                                     textAlign: "center",
-                                    width: "120px", // Ширина кнопки фиксирована
-                                    marginLeft: "30px",
+                                    width: "180px", // Ширина кнопки фиксирована
+                                    marginLeft: "-10px",
                                 }}
                             >
                                 Загрузить файл
@@ -67,8 +68,12 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "flex-start",
-                        width: "150px",
-                        marginLeft: "200px", // Отступ слева для сдвига списка файлов
+                        width: "200px",
+                        marginLeft: "30px", // Отступ слева для сдвига списка файлов
+                        maxHeight: "200px", // Фиксированная высота
+                        overflowY: "auto", // Полоса прокрутки только по вертикали
+                        overflowX: "hidden", // Убираем горизонтальную полосу прокрутки
+                        top: '-15px'
                     }}
                 >
                     {hotelInfo.files.map((file, index) => (
@@ -78,7 +83,7 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                                 display: "flex",
                                 alignItems: "center",
                                 marginTop: "10px",
-                                maxWidth: "100%",
+                                width: "100%", // Обеспечиваем ширину в пределах контейнера
                             }}
                         >
                             <p
@@ -86,8 +91,8 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
-                                    marginRight: "10px",
-                                    flex: "1",
+                                    marginRight: "10px", // Вернули стандартный отступ
+                                    flexGrow: 1, // Текст занимает доступное пространство
                                 }}
                             >
                                 {file.name}
@@ -108,6 +113,8 @@ const AddFile = ({ hotelInfo, onFileAdd, onFileRemove, fileError, handlePrevStag
                         </div>
                     ))}
                 </div>
+
+
             </div>
 
             {fileError && (

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from application.LLM.LLM import apply
+from application.LLM.LLM import apply, correct
 from application.models import Hotel, Service, Conversation, Message
 from application import db
 from application import MapsClient
@@ -21,15 +21,13 @@ def create():
     services = data['services']
     comment = data['comment']
     description_type = data['description_type']
-    #lon, lat = MapsClient.find_coordinates_by_address(address)
-    lon, lat = 10, 20
+    lon, lat = MapsClient.find_coordinates_by_address(address)
     hotel = Hotel.query.filter_by(lon=lon, lat=lat).first()
     if hotel is None:
         dict_hotel = create_hotel(name, address, rooms, services, lon, lat, description_type, session_id)
     else:
         dict_hotel = update_hotel(hotel.id, name, address, rooms, services, session_id)
-    info = SiteInfo(name, address, lon, lat, comment, rooms, services)
-    description = apply(info, conversation.get_conversation())
+    description = apply(name, address, rooms, description_type, comment, services)
     bot_message = Message(description, '0', session_id)
     db.session.add(bot_message)
     dict_hotel['description'] = description
