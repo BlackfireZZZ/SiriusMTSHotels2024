@@ -5,6 +5,7 @@ from application.parsing import parser
 from application.config import Config
 from application.parsing.ostorovok_parsing import main
 import urllib3
+import json
 
 
 @app.route('/ping', methods=['GET'])
@@ -16,8 +17,14 @@ def response_ping():
 def parse():
     data = request.json
     url = data['url']
-    data = main(url)
-    return jsonify(data)
+    parsed_data = main(url)
+
+    response = app.response_class(
+            response=json.dumps(parsed_data, ensure_ascii=False),
+            status=200,
+            mimetype='application/json'
+        )
+    return response
 
 
 @app.route('/speech_to_text', methods=['POST'])

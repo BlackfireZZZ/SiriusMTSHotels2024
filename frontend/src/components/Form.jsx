@@ -123,7 +123,7 @@ const Form = ({ formRef }) => {
                 // Обновляем информацию об отеле
                 setHotelInfo((prev) => ({
                     ...prev,
-                    name: data.name,
+                    name: data.hotel_name,
                     address: data.address,
                     services: data.services,
                 }));
@@ -330,6 +330,7 @@ const Form = ({ formRef }) => {
                                                 setErrorMessage={setErrorMessage} hotelInfo={hotelInfo}
                                                 setHotelInfo={setHotelInfo} loading={loading} setLoading={setLoading}
                                                 dots={dots} hasHotel={hasHotel} setDescription={setDescription}
+                                                        stage={stage} setStage={setStage}
                                                 />
                                             )}
                                             {stage === 6 && (

@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from application.LLM.LLM import apply, correct
 from application.models import Hotel, Service, Conversation, Message
 from application import db
 from application import MapsClient
 from typing import List
+import json
+
 
 from application.schemas import SiteInfo
 
@@ -34,10 +36,16 @@ def create():
     hotel = Hotel.query.filter_by(lon=lon, lat=lat).first()
     hotel.description = description
     db.session.commit()
-    return jsonify({
+    response_data = {
         'hotel': dict_hotel,
         'description': description
-    })
+    }
+    response = current_app.response_class(
+                response=json.dumps(response_data, ensure_ascii=False),
+                status=200,
+                mimetype='application/json'
+            )
+    return response
 
 
 def create_hotel(name: str, address: str, rooms: int, services: List[str], lon: float, lat: float,

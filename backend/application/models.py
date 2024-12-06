@@ -98,7 +98,7 @@ class Conversation(db.Model):
 
 class Message(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    text = db.Column(db.String(500), nullable=False)
+    text = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(36), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     conversation_id = db.Column(db.String(36), db.ForeignKey('conversation.id'), nullable=False)

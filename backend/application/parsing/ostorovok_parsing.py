@@ -36,22 +36,20 @@ def parse_address(soup):
 
 def parse_amenities(soup):
     amenities_div = soup.find('div', class_='Amenities_list__pYDjd')
-    amenities = {}
+    amenities = []
     if amenities_div:
         groups = amenities_div.find_all('div', class_='Amenities_group__X5Qd7')
         for group in groups:
             header = group.find('h3', class_='Amenities_groupTitle__aDVIi')
             if header:
                 group_name = header.text.strip()
-                amenities_list = []
                 ul = group.find('ul', class_='Amenities_groupAmenities__jeJSS')
                 if ul:
                     items = ul.find_all('li', class_='Amenities_groupAmenity__NXWsV')
                     for item in items:
                         amenity = item.find('div', class_='Amenities_amenityName__a_l1_')
                         if amenity:
-                            amenities_list.append(amenity.text.strip())
-                amenities[group_name] = amenities_list
+                            amenities.append(amenity.text.strip())
     return amenities
 
 
@@ -91,21 +89,12 @@ def main(url: str):
         
         # Парсинг услуг
         amenities = parse_amenities(soup)
-        print("Услуги и удобства:")
-        for group, items in amenities.items():
-            print(f"\n{group}:")
-            for item in items:
-                print(f" - {item}")
         
         # Парсинг описания
         description = parse_description(soup)
-        print(f"\nОписание:\n{description}")
         
         # Парсинг отзывов
         reviews = parse_reviews(soup)
-        print(f"\nОтзывы ({len(reviews)}):")
-        for i, review in enumerate(reviews, 1):
-            print(f"\nОтзыв {i}: {review}")
         
         # Сохранение данных в JSON файл
         data = {

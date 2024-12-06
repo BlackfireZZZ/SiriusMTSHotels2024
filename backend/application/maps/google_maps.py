@@ -2,6 +2,8 @@ import os
 from typing import List, Tuple
 import googlemaps
 
+from application.config import Config
+
 from typing import Optional
 
 
@@ -52,7 +54,7 @@ class GoogleMaps:
     }
 
     def __init__(self, api_key: str):
-        self.gmaps = googlemaps.Client(key=api_key)
+        self.gmaps = googlemaps.Client(key=Config.API_KEY)
 
     def find_coordinates_by_address(self, address: str) -> Optional[Tuple[float, float]]:
         """
@@ -99,7 +101,7 @@ class GoogleMaps:
 
 # Пример использования
 if __name__ == '__main__':
-    gmaps_client = GoogleMaps(os.getenv('API_KEY'))
+    gmaps_client = GoogleMaps(Config.API_KEY)
 
     # lon, lat = gmaps_client.find_coordinates_by_address('Мясницкая улица, 14/2с1')
     # print(lon, lat)

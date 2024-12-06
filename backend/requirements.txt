@@ -6,3 +6,4 @@ psycopg2-binary==2.9.9
 
 requests~=2.32.3
 urllib3~=2.2.3
+beautifulsoup4~=4.12.3
