@@ -1,5 +1,0 @@
-POSTGRES_CONN=postgres://postgres:postgres@db:5432/Sirius
-POSTGRES_DB=Sirius
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-API_KEY=AIzaSyDHHEgSZxtB-wQ3VHiu0jB230N1a3S9c2c
