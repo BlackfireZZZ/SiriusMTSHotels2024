@@ -1,7 +1,7 @@
 import requests
 from typing import List
 
-url = 'https://kpg6mo-188-170-214-41.ru.tuna.am'
+url = 'https://b2ipb8-188-170-214-41.ru.tuna.am'
 
 description = 'Отель Kostas — ваш идеальный выбор для пребывания в сердце культурной столицы Санкт-Петербурга. Располагаясь всего в шаге от великолепных достопримечательностей, таких как Государственный музей городской скульптуры и Православная духовная академия, отель предлагает 42 комфортабельных номера, идеально подходящие для деловых и семейных поездок. Вокруг отеля вы найдете множество исторических и культурных заведений, включая музеи, церкви и памятники, что делает ваше пребывание здесь не только приятным, но и информативным. Отличный выбор для тех, кто стремится погрузиться в атмосферу города, от его глубоких исторических корней до современных культурологических инициатив.Особое внимание стоит уделить уникальному сервису отеля, который включает в себя температурный контроль для гостей, обеспечивающий идеальные условия для отдыха, независимо от погоды. Отель Kostas — не просто место для ночлега, а полноценное приключение в мире культуры и истории Санкт-Петербурга.'
 
@@ -39,11 +39,11 @@ def apply(hotel_name: str, address: str, count_rooms: int, style: str, comment: 
     }
 
     try:
-        response = requests.post(new_url, json=payload, headers=headers)
+        response = requests.post(new_url, json=payload, headers=headers, timeout=None)
         response.raise_for_status()
         return response.text
     except requests.exceptions.RequestException as e:
-        return description
+        return e
 
 
 def correct(context: List) -> str:
@@ -57,8 +57,8 @@ def correct(context: List) -> str:
         "Content-Type": "application/json"
     }
     try:
-        response = requests.post(new_url, json=payload, headers=headers)
+        response = requests.post(new_url, json=payload, headers=headers, timeout=None)
         response.raise_for_status()
         return response.text
     except requests.exceptions.RequestException as e:
-        return description
+        return e

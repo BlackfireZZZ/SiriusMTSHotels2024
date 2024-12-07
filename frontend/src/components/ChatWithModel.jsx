@@ -95,14 +95,16 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
                         placeholder="Ваши правки"
                     />
                     <div style={{
-                        position: "relative", // Абсолютное позиционирование внутри контейнера
+                        position: "absolute", // Абсолютное позиционирование внутри контейнера
                         bottom: "10px", // Отступ от нижнего края
                         right: "10px", // Отступ от правого края
-                        padding: "5px 10px",
                         cursor: "pointer",
+                        width: '45px',
+                        height: '45px',
                     }}>
                         <VoiceToText
                             onTextDetected={handleCommentDetected}
+
                         />
                     </div>
 

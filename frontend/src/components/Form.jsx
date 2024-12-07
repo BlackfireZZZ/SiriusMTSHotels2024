@@ -12,7 +12,7 @@ import ChatWithModel from "./ChatWithModel";
 
 const Form = ({ formRef, description, setDescription }) => {
     // const [stage, setStage] = useState(+Cookies.get("stage") || 1);
-    const [stage, setStage] = useState(6);
+    const [stage, setStage] = useState(1);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);

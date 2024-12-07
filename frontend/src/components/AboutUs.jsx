@@ -155,16 +155,21 @@ const AboutUs = ({ aboutUsRef }) => {
                                             <div className="lqd-imggrp-img-container" data-parallax="true"
                                                  style={{borderRadius: '25px'}}
                                                  data-parallax-options="{&quot;overflowHidden&quot;:true,&quot;ease&quot;:&quot;linear&quot;,&quot;start&quot;:&quot;top bottom&quot;}">
-                                                <figure className="loaded"><img width={405} height={491}
-                                                                                src={require('../assets/girls.png')}
-                                                                                className="ld-lazyload entered loaded"
-                                                                                alt=""
-                                                                                data-src={require('../assets/girls.png')}
-                                                                                data-srcset={require('../assets/girls.png')}
-                                                                                data-aspect data-ll-status="loaded"
-                                                                                srcSet={require('../assets/girls.png')}
-                                                                                style={{borderRadius: '25px'}}
-                                                />
+                                                <figure className="loaded">
+                                                    <video
+                                                        width={405}
+                                                        height={720} // Устанавливаем высоту для стандартного вертикального соотношения 9:16
+                                                        src={require('../assets/mts.mp4')}
+                                                        className="ld-lazyload entered loaded"
+                                                        alt=""
+                                                        controls // Добавляем управление для полосы проигрывания и звука
+                                                        style={{
+                                                            borderRadius: '25px',
+                                                            objectFit: 'cover', // Чтобы видео корректно вписывалось в заданные размеры
+                                                            aspectRatio: '9 / 16' // Устанавливаем соотношение сторон
+                                                        }}
+                                                    />
+
                                                 </figure>
                                             </div>
                                         </div>
@@ -176,7 +181,7 @@ const AboutUs = ({ aboutUsRef }) => {
                 </div>
                 <div
                     className="wpb_column vc_column_container vc_col-sm-12 text-center liquid-column-634d4b2e20ed0 liquid-column-responsive-634d4b2e20ed1">
-                    <div className="vc_column-inner vc_custom_1605401078625">
+                <div className="vc_column-inner vc_custom_1605401078625">
                         <div className="wpb_wrapper ca-initvalues-applied lqd-animations-done"
                              data-custom-animations="true"
                              data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;all-childs&quot;,&quot;duration&quot;:&quot;1800&quot;,&quot;delay&quot;:&quot;180&quot;,&quot;ease&quot;:&quot;power4.out&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;y&quot;:35,&quot;transformOriginX&quot;:50,&quot;transformOriginY&quot;:50,&quot;transformOriginZ&quot;:&quot;0px&quot;,&quot;opacity&quot;:0},&quot;animations&quot;:{&quot;y&quot;:0,&quot;transformOriginX&quot;:50,&quot;transformOriginY&quot;:50,&quot;transformOriginZ&quot;:&quot;0px&quot;,&quot;opacity&quot;:1}}">

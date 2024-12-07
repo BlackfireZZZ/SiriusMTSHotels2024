@@ -3,9 +3,9 @@ import React from "react";
 const Stage3 = ({ hotelInfo, handleStyleChange, handlePrevStage, handleNextStage }) => {
 
     const exampleText = {
-        formal: "We cordially invite you to partake in our exquisite event, designed to leave an indelible mark upon your esteemed experience.",
-        neutral: "Join us for an event that promises to be both enjoyable and memorable.",
-        informal: "Hey, come hang out with us! It's going to be fun, promise!",
+        formal: "Мы с гордостью приглашаем вас насладиться отдыхом в нашем изысканном отеле, где каждый момент станет воплощением вашего представления о роскоши.",
+        neutral: "Останавливайтесь у нас и наслаждайтесь комфортным отдыхом в уютной и приятной атмосфере.",
+        informal: "Приезжай к нам — здесь уютно, красиво и всё создано для твоего отдыха",
     };
 
     return (

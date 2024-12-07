@@ -185,7 +185,7 @@ const Stage5 = ({ handlePrevStage, hotelInfo, setHotelInfo, errorMessage, setErr
                                                                     onTextDetected={handleHotelCommentDetected}
 
                                                                 />
-                                                            </div>
+                                                                </div>
                                                             </span>
 
 
