@@ -30,6 +30,7 @@ def add_message():
     db.session.add(new_message)
     db.session.commit()
     context = conversation.get_conversation()
+    context['messages'] = context['messages'][-2:]
     new_description = correct(context)
     bot_message = Message(new_description, '0', conversation_id)  # 0 - автор - бот
     db.session.add(bot_message)

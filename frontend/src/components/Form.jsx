@@ -12,7 +12,7 @@ import ChatWithModel from "./ChatWithModel";
 
 const Form = ({ formRef, description, setDescription }) => {
     // const [stage, setStage] = useState(+Cookies.get("stage") || 1);
-    const [stage, setStage] = useState(1);
+    const [stage, setStage] = useState(6);
     const [hasHotel, setHasHotel] = useState(null);
     const [hotelLink, setHotelLink] = useState("");
     const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ const Form = ({ formRef, description, setDescription }) => {
         style: "formal",
         services: [], // Новый массив для хранения списка услуг
         files: [], // Новый список для фото
+        reviews: [],
     });
     const [fileError, setFileError] = useState("");
 
@@ -125,6 +126,7 @@ const Form = ({ formRef, description, setDescription }) => {
                     name: data.hotel_name,
                     address: data.address,
                     services: data.services,
+                    reviews: data.reviews,
                 }));
 
                 // Переход к следующему этапу

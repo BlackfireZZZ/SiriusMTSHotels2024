@@ -65,6 +65,7 @@ const Stage5 = ({ handlePrevStage, hotelInfo, setHotelInfo, errorMessage, setErr
             services: hotelInfo.services, // Услуги передаются как массив
             comment: hotelInfo.comment,
             description_type: hotelInfo.style,
+            reviews: hotelInfo.reviews,
         };
 
         // Отправка запроса на сервер

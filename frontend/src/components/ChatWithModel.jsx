@@ -1,6 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import VoiceToText from "./VoiceToText";
 import base_url from "../config";
+import DescriptionBlock from "./DescriptionBlock";
+
 
 const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, description, setDescription, dots
                        }) => {
@@ -43,6 +45,19 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
         setComment((prev) => `${prev} ${text}`.trim());
     };
 
+    const handleCopy = () => {
+        // Копирование текста без учета разметки Markdown
+        navigator.clipboard.writeText(description);
+        setButtonText("Copied");
+    };
+
+    const [buttonText, setButtonText] = useState("Copy");
+
+    // Сбрасываем текст кнопки при изменении description
+    useEffect(() => {
+        setButtonText("Copy");
+    }, [description]);
+
     return (
         <form onSubmit={handleNewSubmit} style={{width: '100%'}}>
             <div
@@ -60,7 +75,16 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
                     display: "block"
                 }} // Контейнер для относительного позиционирования
                 >
-                    <p>Внесите ваши правки</p>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            marginBottom: "10px",// Размещает элементы с равными отступами
+                        }}
+                    >
+                        <p>Внесите ваши правки</p>
+                    </div>
                     <textarea
                         name="edits"
                         value={comment}
@@ -71,7 +95,7 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
                         placeholder="Ваши правки"
                     />
                     <div style={{
-                        position: "absolute", // Абсолютное позиционирование внутри контейнера
+                        position: "relative", // Абсолютное позиционирование внутри контейнера
                         bottom: "10px", // Отступ от нижнего края
                         right: "10px", // Отступ от правого края
                         padding: "5px 10px",
@@ -84,15 +108,35 @@ const ChatWithModel = ({ errorMessage, setErrorMessage, loading, setLoading, des
 
                 </div>
                 <div style={{flex: "1 1 calc(50% - 15px)"}}>
-                    <p>Описание отеля</p>
-                    <textarea
-                        onChange={(e) => setDescription(e.target.value)}
-                        name="description"
-                        cols={10}
-                        rows={5}
-                        style={{width: "100%"}}
-                        value={description}
-                    />
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between", // Размещает элементы с равными отступами
+                        }}
+                    >
+                        <p style={{margin: 0}}>Полученное описание</p>
+                        {description && (
+                            <button
+                                type="button"
+                                onClick={handleCopy}
+                                style={{
+                                    position: 'relative',
+                                    bottom: '10px',
+                                    padding: "5px 10px",
+                                    fontSize: "12px",
+                                    backgroundColor: "#bdbdbd",
+                                    color: "#fff",
+                                    border: "none",
+                                    borderRadius: "3px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                {buttonText}
+                            </button>
+                        )}
+                    </div>
+                    <DescriptionBlock description={description}/>
                 </div>
 
 
